@@ -2,6 +2,8 @@
 
 > 懒喵-小工具，热点资讯，技术博客...应有尽有
 
+![Alt text](https://github.com/hilanmiao/LanMiaoDesktop/blob/master/static/screen.png)
+
 #### Build Setup
 
 ``` bash
