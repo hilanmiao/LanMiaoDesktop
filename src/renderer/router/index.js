@@ -11,6 +11,11 @@ export default new Router({
             component: require('@/components/IntroView/IntroView').default
         },
         {
+            path: '/update',
+            name: 'update',
+            component: require('@/components/UpdateView/UpdateView').default
+        },
+        {
             path: '/welcome',
             name: 'welcome-view',
             component: require('@/components/WelcomeView').default
