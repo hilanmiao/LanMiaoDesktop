@@ -63,7 +63,7 @@ function sendUpdateMessage(text) {
 }
 
 // 监测更新，在你想要检查更新的时候执行，renderer事件触发后的操作自行编写
-let message = {
+let message = { // eslint-disable-line no-unused-vars
     error: '检查更新出错',
     checking: '正在检查更新......',
     updateAva: '监测到新版本，正在下载......',
@@ -74,19 +74,20 @@ const os = require('os') // eslint-disable-line no-unused-vars
 
 // 当更新出现错误时触发
 autoUpdater.on('error', (err) => {
-    sendUpdateMessage(message.error)
+    sendUpdateMessage('error')
 })
 // 当开始检查更新的时候触发
 autoUpdater.on('checking-for-update', () => {
-    sendUpdateMessage(message.checking)
+    sendUpdateMessage('checking')
 })
 // 当发现一个可用更新的时候触发，更新下载包会自动开始
+autoUpdater.autoDownload = false
 autoUpdater.on('update-available', (info) => {
-    sendUpdateMessage(message.updateAva)
+    sendUpdateMessage('updateAva')
 })
 // 当没有可用更新的时候触发
 autoUpdater.on('update-not-available', (info) => {
-    sendUpdateMessage(message.updateNotAva)
+    sendUpdateMessage('updateNotAva')
 })
 // 更新下载进度事件
 autoUpdater.on('download-progress', (progressObj) => {
@@ -101,8 +102,6 @@ autoUpdater.on('download-progress', (progressObj) => {
  */
 autoUpdater.on('update-downloaded', (info) => {
     ipcMain.on('isUpdateNow', (e, arg) => {
-        console.log(arguments)
-        console.log('开始更新')
         // some code here to handle event
         autoUpdater.quitAndInstall()
     })
@@ -112,4 +111,9 @@ autoUpdater.on('update-downloaded', (info) => {
 ipcMain.on('checkForUpdate', () => {
     // 执行自动更新检查
     autoUpdater.checkForUpdates()
+})
+
+ipcMain.on('downloadUpdate', () => {
+    // 下载
+    autoUpdater.downloadUpdate()
 })
