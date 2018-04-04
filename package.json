@@ -1,6 +1,6 @@
 {
   "name": "lanmiao",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "author": "hilanmiao <hilanmiao@126.com>",
   "description": "懒喵-小工具，热点资讯，技术博客...应有尽有",
   "license": "MIT",
@@ -50,7 +50,7 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon2.ico"
     },
     "linux": {
       "icon": "build/icons"

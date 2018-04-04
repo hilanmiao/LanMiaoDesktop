@@ -7,13 +7,18 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'intro',
-            component: require('@/components/IntroView/IntroView').default
+            name: 'todo',
+            component: require('@/components/ToDoView/ToDoView').default
         },
         {
             path: '/update',
             name: 'update',
             component: require('@/components/UpdateView/UpdateView').default
+        },
+        {
+            path: '/intro',
+            name: 'intro',
+            component: require('@/components/IntroView/IntroView').default
         },
         {
             path: '/welcome',

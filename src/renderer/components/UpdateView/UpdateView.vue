@@ -4,7 +4,7 @@
             <v-flex xs4>
                 <v-badge color="red" v-model="hasNewVersion">
                     <span slot="badge">!</span>
-                    <h1>当前版本：1.0.1</h1>
+                    <h1>当前版本：1.0.0</h1>
                 </v-badge>
                 <div>
                     <v-btn color="info" v-show="hasNewVersion" @click="downloadAndUpdate">下载更新</v-btn>

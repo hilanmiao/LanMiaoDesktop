@@ -54,14 +54,17 @@
             </v-list>
         </v-navigation-drawer>
         <v-toolbar
-                app
                 color="blue darken-3"
+                app
                 dark
                 :clipped-left="$vuetify.breakpoint.lgAndUp"
                 fixed>
             <v-toolbar-title style="width:300px" class="ml-0 pl-3">
                 <v-toolbar-side-icon @click.stop="drawer= !drawer"></v-toolbar-side-icon>
-                <span class="hidden-sm-and-down">懒喵</span>
+                <!--<span class="hidden-sm-and-down">懒喵</span>-->
+                <span class="hidden-sm-and-down">
+                    <img src="~@/assets/logo.png" alt="懒喵" style="height: 50px;vertical-align: middle;">
+                </span>
             </v-toolbar-title>
             <v-text-field
                     flat
@@ -148,7 +151,7 @@
             drawer: null,
             dialog: false,
             items: [
-                {icon: 'contacts', text: 'Contacts', to: '/welcome'},
+                {icon: 'contacts', text: '待办记事', to: '/todo'},
                 {
                     icon: 'keyboard_arrow_up',
                     'icon-alt': 'keyboard_arrow_down',

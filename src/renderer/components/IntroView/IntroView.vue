@@ -3,7 +3,7 @@
         <canvas></canvas>
         <div class="info-wrapper">
             <h1><a href="">lan miao</a></h1>
-            <h2>Laziness is an attitude</h2>
+                <h2>Laziness is an attitude</h2>
             <p><a href="http://lanmiao.oschina.io/" target="_blank">Blog</a></p>
             <p><a href="https://github.com/hilanmiao" target="_blank">Github</a></p>
         </div>
