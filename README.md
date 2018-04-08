@@ -3,6 +3,9 @@
 > 懒喵-小工具，热点资讯，技术博客...应有尽有
 
 ![Alt text](https://github.com/hilanmiao/LanMiaoDesktop/blob/master/static/screen.png)
+![Alt text](https://github.com/hilanmiao/LanMiaoDesktop/blob/master/static/screenHome.png)
+![Alt text](https://github.com/hilanmiao/LanMiaoDesktop/blob/master/static/screenInstall.png)
+![Alt text](https://github.com/hilanmiao/LanMiaoDesktop/blob/master/static/screenTray.png)
 
 #### Build Setup
 
