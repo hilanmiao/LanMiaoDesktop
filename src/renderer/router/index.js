@@ -11,6 +11,11 @@ export default new Router({
             component: require('@/components/ToDoView/ToDoView').default
         },
         {
+            path: '/douyu',
+            name: 'douyu',
+            component: require('@/components/DouYuView/DouYuView').default
+        },
+        {
             path: '/update',
             name: 'update',
             component: require('@/components/UpdateView/UpdateView').default

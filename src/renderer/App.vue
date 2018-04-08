@@ -152,6 +152,7 @@
             dialog: false,
             items: [
                 {icon: 'contacts', text: '待办记事', to: '/todo'},
+                {icon: 'contacts', text: '斗鱼直播', to: '/douyu'},
                 {
                     icon: 'keyboard_arrow_up',
                     'icon-alt': 'keyboard_arrow_down',
