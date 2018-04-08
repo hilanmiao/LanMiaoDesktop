@@ -1,9 +1,13 @@
 'use strict'
 
-import {app, BrowserWindow, ipcMain} from 'electron'
+import {app, BrowserWindow, ipcMain, Menu, Tray, shell} from 'electron'
 // 自动更新相关
 import {autoUpdater} from 'electron-updater'
 
+// 托盘对象
+let appTray = null
+// 是否可以退出
+let trayClose = false
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -22,17 +26,65 @@ function createWindow() {
      * Initial window options
      */
     mainWindow = new BrowserWindow({
-        height: 563,
+        height: 840,
         useContentSize: true,
-        width: 1000
+        width: 1080
     })
 
     mainWindow.loadURL(winURL)
 
-    mainWindow.webContents.openDevTools()
+    if (process.env.NODE_ENV === 'development') {
+        mainWindow.webContents.openDevTools()
+    }
+    mainWindow.on('close', (event) => {
+        if (!trayClose) {
+            // 最小化
+            mainWindow.hide()
+            event.preventDefault()
+        }
+    })
 
     mainWindow.on('closed', () => {
         mainWindow = null
+    })
+
+    // 为了防止闪烁，让画面准备好了再显示
+    // 对于一个复杂的应用，ready-to-show 可能发出的太晚，会让应用感觉缓慢。 在这种情况下，建议立刻显示窗口，并使用接近应用程序背景的 backgroundColor
+    // 请注意，即使是使用 ready-to-show 事件的应用程序，仍建议使用设置 backgroundColor 使应用程序感觉更原生。
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show()
+    })
+    // 系统托盘右键菜单
+    const trayMenuTemplate = [
+        {
+            label: '关于我们',
+            click: function () {
+                // 打开外部链接
+                shell.openExternal('http://www.baidu.com')
+            }
+        },
+        {
+            label: '退出',
+            click: function () {
+                // 退出
+                trayClose = true
+                app.quit()
+            }
+        }
+    ]
+    // 系统托盘图标
+    const path = require('path')
+    const iconPath = path.join(__dirname, '/static/icon2.ico')
+    appTray = new Tray(iconPath)
+    // 图标的上上下文
+    const contextMenu = Menu.buildFromTemplate(trayMenuTemplate)
+    // 设置此托盘图标的悬停提示内容
+    appTray.setToolTip('天天好心情')
+    // 设置此图标的上下文菜单
+    appTray.setContextMenu(contextMenu)
+    // 主窗口显示隐藏切换
+    appTray.on('click', () => {
+        mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
     })
 }
 
