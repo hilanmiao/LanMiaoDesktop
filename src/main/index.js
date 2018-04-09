@@ -8,6 +8,27 @@ import {autoUpdater} from 'electron-updater'
 let appTray = null
 // 是否可以退出
 let trayClose = false
+const path = require('path')
+
+// 指定 flash 路径，假定它与 main.js 放在同一目录中。
+let pluginName
+switch (process.platform) {
+    case 'win32':
+        pluginName = '/static/pepflashplayer32_29_0_0_113.dll'
+        break
+    case 'darwin':
+        pluginName = 'PepperFlashPlayer.plugin'
+        break
+    case 'linux':
+        pluginName = 'libpepflashplayer.so'
+        break
+}
+app.commandLine.appendSwitch('ppapi-flash-path', '/static/pepflashplayer64_29_0_0_113.dll')
+// app.commandLine.appendSwitch('ppapi-flash-path', app.getPath('pepperFlashSystemPlugin'))
+
+// 可选：指定 flash 的版本，例如 v17.0.0.169
+app.commandLine.appendSwitch('ppapi-flash-version', '29.0.0.113')
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -28,7 +49,11 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         height: 840,
         useContentSize: true,
-        width: 1080
+        width: 1080,
+        webPreferences: {
+            webSecurity: false,
+            plugins: true
+        }
     })
 
     mainWindow.loadURL(winURL)
@@ -73,7 +98,6 @@ function createWindow() {
         }
     ]
     // 系统托盘图标
-    const path = require('path')
     const iconPath = path.join(__dirname, '/static/icon2.ico')
     appTray = new Tray(iconPath)
     // 图标的上上下文
