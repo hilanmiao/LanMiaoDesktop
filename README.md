@@ -36,9 +36,9 @@ This project was generated with [electron-vue](https://github.com/SimulatedGREG/
 
 #### 程序截图
 
-![Alt text](https://gitee.com/XiaoLanMiao/LanMiaoDesktop/blob/master/static/screen.png)
-![Alt text](https://gitee.com/XiaoLanMiao/LanMiaoDesktop/blob/master/static/screenHome.png)
-![Alt text](https://gitee.com/XiaoLanMiao/LanMiaoDesktop/blob/master/static/screenInstall.png)
-![Alt text](https://gitee.com/XiaoLanMiao/LanMiaoDesktop/blob/master/static/screenTray.png)
-![Alt text](https://gitee.com/XiaoLanMiao/LanMiaoDesktop/blob/master/static/screen1.png)
-![Alt text](https://gitee.com/XiaoLanMiao/LanMiaoDesktop/blob/master/static/screen2.png)
+![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screen.png)
+![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screenHome.png)
+![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screenInstall.png)
+![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screenTray.png)
+![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screen1.png)
+![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screen2.png)
