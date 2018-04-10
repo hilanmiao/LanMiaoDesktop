@@ -11,20 +11,20 @@ let trayClose = false
 const path = require('path')
 
 // 指定 flash 路径，假定它与 main.js 放在同一目录中。
-let pluginName
-switch (process.platform) {
-    case 'win32':
-        pluginName = '/static/pepflashplayer32_29_0_0_113.dll'
-        break
-    case 'darwin':
-        pluginName = 'PepperFlashPlayer.plugin'
-        break
-    case 'linux':
-        pluginName = 'libpepflashplayer.so'
-        break
-}
-app.commandLine.appendSwitch('ppapi-flash-path', '/static/pepflashplayer64_29_0_0_113.dll')
-// app.commandLine.appendSwitch('ppapi-flash-path', app.getPath('pepperFlashSystemPlugin'))
+// let pluginName
+// switch (process.platform) {
+//     case 'win32':
+//         pluginName = '/static/pepflashplayer64_29_0_0_113.dll'
+//         break
+//     case 'darwin':
+//         pluginName = 'PepperFlashPlayer.plugin'
+//         break
+//     case 'linux':
+//         pluginName = 'libpepflashplayer.so'
+//         break
+// }
+// app.commandLine.appendSwitch('ppapi-flash-path', pluginName)
+app.commandLine.appendSwitch('ppapi-flash-path', app.getPath('pepperFlashSystemPlugin'))
 
 // 可选：指定 flash 的版本，例如 v17.0.0.169
 app.commandLine.appendSwitch('ppapi-flash-version', '29.0.0.113')
