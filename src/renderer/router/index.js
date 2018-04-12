@@ -16,6 +16,11 @@ export default new Router({
             component: require('@/components/DouYuView/DouYuView').default
         },
         {
+            path: '/setting',
+            name: 'setting',
+            component: require('@/components/SettingView/SettingView').default
+        },
+        {
             path: '/update',
             name: 'update',
             component: require('@/components/UpdateView/UpdateView').default

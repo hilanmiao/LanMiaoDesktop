@@ -175,9 +175,9 @@
                         {text: 'Other contacts'}
                     ]
                 },
-                {icon: 'settings', text: '设置', to: '/inspire'},
+                {icon: 'settings', text: '设置', to: '/setting'},
                 {icon: 'chat_bubble', text: '检查更新', to: '/update'},
-                {icon: 'chat_bubble', text: '意见反馈', to: '/intro'},
+                {icon: 'chat_bubble', text: '意见反馈', to: '/inspire'},
                 {icon: 'chat_bubble', text: '关于懒喵', to: '/intro'}
             ]
         }),

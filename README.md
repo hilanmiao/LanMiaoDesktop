@@ -10,6 +10,7 @@
 - [x] 添加todos模块，来自vue官方实例
 - [x] 结合axios调用斗鱼api，使用webview打开视频链接页面
 - [x] webview播放flash，需要插件pepperFlashSystemPlugin
+- [x] 添加设置模块，使用node-winreg插件实现开机自动启动功能
 - [ ] 硬件：结合摄像头进行身份证识别
 
 
@@ -42,3 +43,4 @@ This project was generated with [electron-vue](https://github.com/SimulatedGREG/
 ![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screenTray.png)
 ![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screen1.png)
 ![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screen2.png)
+![Alt text](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/static/screen3.png)

@@ -4,6 +4,17 @@ import {app, BrowserWindow, ipcMain, Menu, Tray, shell} from 'electron'
 // 自动更新相关
 import {autoUpdater} from 'electron-updater'
 
+// 自动启动相关
+const startOnBoot = require('./startOnBoot.js')
+// 应用程序名称 （cmd命令"msconfig-启动项"查看）
+const exeName = 'LanMiao'
+// // 设置自动启动
+// startOnBoot.getAutoStartValue(exeName, (error, result) => {
+//     if (result) {
+//         startOnBoot.enableAutoStart(exeName, process.execPath)
+//     }
+// })
+
 // 托盘对象
 let appTray = null
 // 是否可以退出
@@ -47,9 +58,9 @@ function createWindow() {
      * Initial window options
      */
     mainWindow = new BrowserWindow({
-        height: 840,
+        height: 768,
         useContentSize: true,
-        width: 1080,
+        width: 1366,
         webPreferences: {
             webSecurity: false,
             plugins: true
@@ -58,9 +69,9 @@ function createWindow() {
 
     mainWindow.loadURL(winURL)
 
-    if (process.env.NODE_ENV === 'development') {
-        mainWindow.webContents.openDevTools()
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    mainWindow.webContents.openDevTools()
+    // }
     mainWindow.on('close', (event) => {
         if (!trayClose) {
             // 最小化
@@ -192,4 +203,25 @@ ipcMain.on('checkForUpdate', () => {
 ipcMain.on('downloadUpdate', () => {
     // 下载
     autoUpdater.downloadUpdate()
+})
+
+// 检查是否自动启动
+ipcMain.on('getAutoStartValue', () => {
+    startOnBoot.getAutoStartValue(exeName, (error, result) => {
+        if (error) {
+            mainWindow.webContents.send('getAutoStartValue', false)
+        } else {
+            mainWindow.webContents.send('getAutoStartValue', true)
+        }
+    })
+})
+
+// 设置开机自动启动
+ipcMain.on('enableAutoStart', () => {
+    startOnBoot.enableAutoStart(exeName, process.execPath)
+})
+
+// 取消开机自动启动
+ipcMain.on('disableAutoStart', () => {
+    startOnBoot.disableAutoStart(exeName)
 })

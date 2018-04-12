@@ -7648,6 +7648,10 @@ window-size@0.3.0:
   version "0.3.0"
   resolved "http://registry.npm.taobao.org/window-size/download/window-size-0.3.0.tgz#b8f0b66e325d22160751e496337e44b45b727546"
 
+winreg@^1.2.4:
+  version "1.2.4"
+  resolved "http://registry.npm.taobao.org/winreg/download/winreg-1.2.4.tgz#ba065629b7a925130e15779108cf540990e98d1b"
+
 wordwrap@0.0.2:
   version "0.0.2"
   resolved "http://registry.npm.taobao.org/wordwrap/download/wordwrap-0.0.2.tgz#b79669bb42ecb409f83d583cad52ca17eaa1643f"
