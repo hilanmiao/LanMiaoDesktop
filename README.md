@@ -4,14 +4,14 @@
 请使用自己的logo
 
 #### 当前已完成功能：
-- [x] 使用UI框架vuetify搭建基本页面结构
-- [x] NSIS安装包美化请参照我的另一个项目[NSIS-UI](https://github.com/hilanmiao/NSIS-UI)
-- [x] 结合阿里云oss进行自动更新
-- [x] 添加todos模块，来自vue官方实例
-- [x] 结合axios调用斗鱼api，使用webview打开视频链接页面
-- [x] webview播放flash，需要插件pepperFlashSystemPlugin
-- [x] 添加设置模块，使用node-winreg插件实现开机自动启动功能
-- [ ] 硬件：结合摄像头进行身份证识别
+- [x] 基础功能：使用**UI框架vuetify**搭建基本页面结构
+- [x] 基础功能：**NSIS安装包美化**请参照我的另一个项目[NSIS-UI](https://github.com/hilanmiao/NSIS-UI)
+- [x] 基础功能：结合阿里云oss进行**自动更新**
+- [x] 基础功能：使用node-winreg插件实现**开机自动启动**
+- [x] 常用功能：添加todos模块，来自vue官方实例
+- [x] 常用功能：结合**axios**调用斗鱼api，使用**webview**打开视频链接页面
+- [x] 常用功能：webview**播放flash**，需要插件pepperFlashSystemPlugin
+- [ ] 其他功能：结合摄像头进行身份证识别
 
 
 #### Build Setup
