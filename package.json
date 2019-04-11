@@ -1,5 +1,5 @@
 {
-  "name": "hi",
+  "name": "hilanmiao",
   "version": "0.0.1",
   "author": "hilanmiao <hilanmiao@126.com>",
   "description": "An electron-vue project",
@@ -52,9 +52,11 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "material-design-icons-iconfont": "^4.0.5",
     "vue": "^2.6.10",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.3",
+    "vuetify": "^1.5.11",
     "vuex": "^3.1.0",
     "vuex-electron": "^1.0.3"
   },
