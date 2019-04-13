@@ -1,3 +1,4 @@
+// import devtools from '@vue/devtools'
 import Vue from 'vue'
 import axios from 'axios'
 
@@ -21,3 +22,7 @@ new Vue({
   store,
   template: '<App/>'
 }).$mount('#app')
+
+// if (process.env.NODE_ENV === 'development') {
+//     devtools.connect('localhost', '9080')
+// }

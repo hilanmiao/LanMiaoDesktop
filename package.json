@@ -61,6 +61,7 @@
     "vuex-electron": "^1.0.3"
   },
   "devDependencies": {
+    "@vue/devtools": "^5.0.9",
     "ajv": "^6.10.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
