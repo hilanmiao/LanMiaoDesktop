@@ -29,7 +29,7 @@
                             </v-subheader>
                         </v-flex>
                         <v-flex xs6 class="text-xs-right" v-if="item.heading === 'Task'">
-                            <v-btn small flat>Add</v-btn>
+                            <v-btn small flat color="orange">Add</v-btn>
                         </v-flex>
                     </v-layout>
                     <v-divider
@@ -130,7 +130,9 @@
                 {heading: 'System'},
                 {isSingle: true, icon: 'settings', text: 'Settings', to: '/settings'},
                 {isSingle: true, icon: 'lightbulb_outline', text: 'Notes', to: '/notes'},
-                {isSingle: true, icon: 'help', text: 'Help', to: '/help'}
+                {isSingle: true, icon: 'help', text: 'Help', to: '/help'},
+                {isSingle: true, icon: 'help', text: 'Login', to: '/login'},
+                {isSingle: true, icon: 'help', text: 'Lock', to: '/lock'}
             ],
             mini: false,
             right: null
@@ -142,8 +144,4 @@
 </script>
 
 <style>
-    /*h1*/
-    /*opacity: 0.3*/
-    /*.v-text-field .v-input__slot*/
-    /*padding: 0 !important*/
 </style>

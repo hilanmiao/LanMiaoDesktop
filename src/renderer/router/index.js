@@ -46,6 +46,36 @@ export default new Router({
             }]
         },
         {
+            path: '/help',
+            name: 'help',
+            redirect: '/help/help',
+            component: require('@/components/Layout/Layout').default,
+            children: [{
+                path: 'help',
+                component: require('@/views/Help/Help').default
+            }]
+        },
+        {
+            path: '/login',
+            name: 'login',
+            redirect: '/login/login',
+            component: require('@/components/Layout/Layout').default,
+            children: [{
+                path: 'login',
+                component: require('@/views/Login/Login').default
+            }]
+        },
+        {
+            path: '/lock',
+            name: 'lock',
+            redirect: '/lock/lock',
+            component: require('@/components/Layout/Layout').default,
+            children: [{
+                path: 'lock',
+                component: require('@/views/Lock/Lock').default
+            }]
+        },
+        {
             path: '*',
             redirect: '/'
         }
