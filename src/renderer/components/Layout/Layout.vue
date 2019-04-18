@@ -28,7 +28,7 @@
                                 {{ item.heading }}
                             </v-subheader>
                         </v-flex>
-                        <v-flex xs6 class="text-xs-right" v-if="item.heading === 'Task'">
+                        <v-flex xs6 class="text-xs-right" v-if="item.heading === 'Home'">
                             <v-btn small flat color="orange">Add</v-btn>
                         </v-flex>
                     </v-layout>
@@ -44,6 +44,7 @@
                             :key="i"
                             v-else-if="item.isSingle"
                             @click=""
+                            active-class="orange"
                     >
                         <v-list-tile-action>
                             <v-icon>{{ item.icon }}</v-icon>
@@ -112,8 +113,8 @@
         data: () => ({
             drawer: null,
             items: [
-                {heading: 'Task'},
-                {isSingle: true, icon: 'list', text: 'Task List', to: '/task'},
+                {heading: 'Home'},
+                {isSingle: true, icon: 'list', text: 'Dashboard', to: '/home'},
                 {heading: 'Manager'},
                 {
                     isGroup: true,
@@ -143,5 +144,9 @@
     }
 </script>
 
-<style>
+<style scoped lang="scss">
+    .primary--text {
+        color: orange !important;
+        caret-color: orange !important;
+    }
 </style>

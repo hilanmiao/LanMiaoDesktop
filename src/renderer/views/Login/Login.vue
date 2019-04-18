@@ -24,7 +24,7 @@
             </v-flex>
         </v-sheet>
 
-        <v-card-text class="pt-0">
+        <v-card-text class="px-4">
             <v-form
                     ref="form"
                     v-model="valid"
