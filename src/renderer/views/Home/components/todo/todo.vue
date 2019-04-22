@@ -13,7 +13,8 @@
                             <v-icon
                                     color="primary"
                                     v-else
-                            >check</v-icon>
+                            >check
+                            </v-icon>
                         </v-list-tile-action>
                         <v-text-field
                                 :label="'New todo input'"
@@ -35,7 +36,7 @@
             <v-card class="mt-3" v-show="todos.length">
                 <v-progress-linear class="my-0" v-model="progressPercentage"/>
                 <v-card-actions class="px-3" v-show="todos.length">
-          <span >
+          <span>
             {{ remaining }} {{ remaining | pluralize('item') }} left
           </span>
                     <v-spacer></v-spacer>
@@ -84,7 +85,7 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex'
+    import {mapActions} from 'vuex'
 
     import TodoItem from './todoItem'
 
@@ -104,20 +105,20 @@
             visibility: 'all'
         }),
         computed: {
-            todos () {
+            todos() {
                 // return this.$store.state.todos
                 return this.$store.state.todo.todos
             },
-            allChecked () {
+            allChecked() {
                 return this.todos.every(todo => todo.done)
             },
-            filteredTodos () {
+            filteredTodos() {
                 return filters[this.visibility](this.todos)
             },
-            remaining () {
+            remaining() {
                 return this.todos.filter(todo => !todo.done).length
             },
-            progressPercentage () {
+            progressPercentage() {
                 const len = this.todos.length
                 return ((len - this.remaining) * 100) / len
             }
@@ -127,7 +128,7 @@
                 'toggleAll',
                 'clearCompleted'
             ]),
-            addTodo () {
+            addTodo() {
                 const text = this.newTodo.trim()
                 if (text) {
                     this.$store.dispatch('addTodo', text)

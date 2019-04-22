@@ -46,16 +46,6 @@ export default new Router({
             }]
         },
         {
-            path: '/help',
-            name: 'help',
-            redirect: '/help/help',
-            component: require('@/components/Layout/Layout').default,
-            children: [{
-                path: 'help',
-                component: require('@/views/Help/Help').default
-            }]
-        },
-        {
             path: '/login',
             name: 'login',
             redirect: '/login/login',

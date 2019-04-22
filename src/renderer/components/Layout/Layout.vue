@@ -85,22 +85,34 @@
         </v-navigation-drawer>
         <v-toolbar app fixed>
             <v-toolbar-side-icon @click.stop="mini = !mini"></v-toolbar-side-icon>
-            <v-toolbar-title>Application</v-toolbar-title>
+            <v-toolbar-title>Balance: $10000.50</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn style="-webkit-app-region: no-drag"
+                   icon
+            >
+                <v-icon>remove</v-icon>
+            </v-btn>
+            <v-btn style="-webkit-app-region: no-drag"
+                   icon
+            >
+                <v-icon style="font-size: 20px;">filter_none</v-icon>
+            </v-btn>
+            <!--<v-btn style="-webkit-app-region: no-drag"-->
+                   <!--icon-->
+            <!--&gt;-->
+                <!--<v-icon>crop_square</v-icon>-->
+            <!--</v-btn>-->
+            <v-btn style="-webkit-app-region: no-drag"
+                   icon
+            >
+                <v-icon>clear</v-icon>
+            </v-btn>
         </v-toolbar>
         <v-content>
             <v-container fluid fill-height grid-list-md>
                 <router-view></router-view>
-                <v-btn
-                        color="orange"
-                        fixed
-                        bottom
-                        right
-                        fab
-
-                >
-                    <v-icon>add</v-icon>
-                </v-btn>
             </v-container>
+            <Add :dialog="dialogAdd"></Add>
         </v-content>
         <v-footer app fixed inset>
             <span>&copy; 2017</span>
@@ -109,8 +121,14 @@
 </template>
 
 <script>
+    import Add from '../add/add'
+
     export default {
+        components: {
+            Add
+        },
         data: () => ({
+                         dialogAdd: false,
             drawer: null,
             items: [
                 {heading: 'Home'},
@@ -145,6 +163,7 @@
 </script>
 
 <style scoped lang="scss">
+
     .primary--text {
         color: orange !important;
         caret-color: orange !important;

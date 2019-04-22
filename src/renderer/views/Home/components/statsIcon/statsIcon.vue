@@ -1,6 +1,6 @@
 <template>
     <v-layout class="mt-3">
-        <v-flex v-for="(item, key) in stats">
+        <v-flex :key="key" v-for="(item, key) in stats">
             <v-card
             >
                 <v-sheet
@@ -19,7 +19,7 @@
                 </v-sheet>
                 <span class="money font-weight-bolod display-1">${{item.money}}</span>
                 <v-card-text class="pt-0 title font-weight-bold">
-                    Today Income
+                    {{item.text}}
                 </v-card-text>
             </v-card>
         </v-flex>
@@ -35,20 +35,20 @@
                 {
                     icon: 'equalizer',
                     money: '6800',
-                    text: 'Today Income',
+                    text: 'Income Today',
+                    color: 'black'
+                },
+                {
+                    icon: 'equalizer',
+                    money: '6800',
+                    text: 'Accounts Today',
+                    color: 'black'
+                },
+                {
+                    icon: 'equalizer',
+                    money: '6800',
+                    text: 'Payments Today',
                     color: 'orange'
-                },
-                {
-                    icon: 'equalizer',
-                    money: '6800',
-                    text: 'Today Income',
-                    color: 'purple'
-                },
-                {
-                    icon: 'equalizer',
-                    money: '6800',
-                    text: 'Today Income',
-                    color: 'green'
                 }
             ]
         })
