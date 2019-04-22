@@ -1,0 +1,32 @@
+E:\workSpace\Electron\LanMiaoDesktop
+├── assets
+├── build
+|  └── icons
+├── dist
+|  ├── electron
+|  └── web
+├── src
+|  ├── main
+|  └── renderer
+|     ├── assets
+|     ├── components
+|     |  ├── add
+|     |  └── Layout
+|     ├── router
+|     ├── store
+|     |  └── plugins
+|     └── views
+|        ├── Help
+|        ├── Home
+|        |  └── components
+|        |  |  ├── add
+|        |  |  ├── history
+|        |  |  ├── statsCurve
+|        |  |  ├── statsIcon
+|        |  |  └── todo
+|        ├── Lock
+|        ├── Login
+|        ├── Notes
+|        └── Settings
+└── static
+

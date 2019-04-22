@@ -83,14 +83,14 @@
                 </template>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar app fixed>
+        <v-toolbar app fixed dense>
             <v-toolbar-side-icon @click.stop="mini = !mini"></v-toolbar-side-icon>
-            <v-toolbar-title>Balance: $10000.50</v-toolbar-title>
+            <v-toolbar-title><span class="red--text">Balance: $10000.50</span></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn style="-webkit-app-region: no-drag"
                    icon
             >
-                <v-icon>remove</v-icon>
+                <v-icon >remove</v-icon>
             </v-btn>
             <v-btn style="-webkit-app-region: no-drag"
                    icon
@@ -105,7 +105,7 @@
             <v-btn style="-webkit-app-region: no-drag"
                    icon
             >
-                <v-icon>clear</v-icon>
+                <v-icon color="red">close</v-icon>
             </v-btn>
         </v-toolbar>
         <v-content>
@@ -115,7 +115,7 @@
             <Add :dialog="dialogAdd"></Add>
         </v-content>
         <v-footer app fixed inset>
-            <span>&copy; 2017</span>
+            <span>&copy; 2019</span>
         </v-footer>
     </v-app>
 </template>
