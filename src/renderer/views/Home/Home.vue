@@ -35,20 +35,8 @@
             </v-layout>
         </v-flex>
         <v-flex d-flex sm5>
-            <v-card>
-                <v-card-text>1111</v-card-text>
-            </v-card>
+            <History></History>
         </v-flex>
-        <v-btn
-                color="orange"
-                fixed
-                bottom
-                right
-                fab
-
-        >
-            <v-icon>add</v-icon>
-        </v-btn>
     </v-layout>
 </template>
 
@@ -64,11 +52,14 @@
             StatsIcon,
             StatsCurve,
             Todo,
-            History,
+            History
         },
         data: () => ({
+            dialogAdd: false
+        }),
+        methods:{
 
-        })
+        }
     }
 </script>
 
