@@ -6,7 +6,8 @@
                 dark
                 :mini-variant="mini"
         >
-            <v-container fluid display-1 font-weight-black text-uppercase style="-webkit-user-select: none;-webkit-app-region: drag">
+            <v-container fluid display-1 font-weight-black text-uppercase
+                         style="-webkit-user-select: none;-webkit-app-region: drag">
                 <v-layout>
                     <v-flex layout justify-center align-center>
                         <!--<v-icon>credit_card</v-icon>-->
@@ -170,29 +171,34 @@
             isMaximized: false,
         }),
         methods: {
-winControl(action) {
-    const browserWindow = remote.getCurrentWindow();
-    switch (action) {
-        case 'minimize':
-            browserWindow.minimize()
-            break;
-        case 'maximize':
-            if (this.isMaximized) {
-                // if (browserWindow.isMaximized()) {
-                browserWindow.unmaximize()
-            } else {
-                browserWindow.maximize()
-            }
-            // this.isMaximized = browserWindow.isMaximized()
-            this.isMaximized = !this.isMaximized
-            break;
-        case 'close':
-            browserWindow.close()
-            break;
-        default:
-            break;
-    }
-},
+            winControl(action) {
+                const browserWindow = remote.getCurrentWindow()
+                switch (action) {
+                    case 'minimize':
+                        browserWindow.minimize()
+                        break;
+                    case 'maximize':
+                        // if (this.isMaximized) {
+                        if (browserWindow.isMaximized()) {
+                            browserWindow.unmaximize()
+                        } else {
+                            if (this.isMaximized) {
+                                browserWindow.unmaximize()
+                            } else {
+                                browserWindow.maximize()
+                            }
+                        }
+                        // this.isMaximized = browserWindow.isMaximized()
+                        this.isMaximized = !this.isMaximized
+
+                        break;
+                    case 'close':
+                        browserWindow.close()
+                        break;
+                    default:
+                        break;
+                }
+            },
         }
     }
 </script>
