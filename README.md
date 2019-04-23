@@ -14,7 +14,7 @@ _**以前的代码比较老了，也没有太多的内容，所以直接覆盖�
 
 ## 应用截图
 
-
+![首页](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/home.jpg)
 
 ## 开发说明
 
@@ -72,9 +72,9 @@ npm run lint
 
 - [Electron开发实战之记账软件1——开篇](https://my.oschina.net/u/3667677/blog/3035515)
 
-- [Electron开发实战之记账软件1——使用electron-vue初始化项目并升级部分包](https://my.oschina.net/u/3667677/blog/3035513)
+- [Electron开发实战之记账软件2——使用electron-vue初始化项目并升级部分包](https://my.oschina.net/u/3667677/blog/3035513)
 
-Electron开发实战之记账软件1——使用UI框架vuetify实现页面
+- [Electron开发实战之记账软件3——使用UI框架vuetify实现页面](https://my.oschina.net/u/3667677/blog/3040223)
 
 Electron开发实战之记账软件1——使用sharedObject共享数据
 
