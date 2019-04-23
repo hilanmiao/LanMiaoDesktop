@@ -6,7 +6,7 @@
                 dark
                 :mini-variant="mini"
         >
-            <v-container fluid display-1 font-weight-black text-uppercase>
+            <v-container fluid display-1 font-weight-black text-uppercase style="-webkit-user-select: none;-webkit-app-region: drag">
                 <v-layout>
                     <v-flex layout justify-center align-center>
                         <!--<v-icon>credit_card</v-icon>-->
@@ -84,26 +84,34 @@
             </v-list>
         </v-navigation-drawer>
         <v-toolbar app fixed dense>
-            <v-toolbar-side-icon @click.stop="mini = !mini"></v-toolbar-side-icon>
-            <v-toolbar-title><span class="red--text">Balance: $10000.50</span></v-toolbar-title>
-            <v-spacer></v-spacer>
+            <v-toolbar-side-icon @click.stop="mini = !mini" style="-webkit-app-region: no-drag"></v-toolbar-side-icon>
+            <v-toolbar-title class="red--text" style="-webkit-user-select: none;-webkit-app-region: drag">
+                Balance: $10000.50
+            </v-toolbar-title>
+            <v-spacer style="height:90%;-webkit-app-region: drag"></v-spacer>
             <v-btn style="-webkit-app-region: no-drag"
                    icon
+                   @click.native.stop="winControl('minimize')"
             >
-                <v-icon >remove</v-icon>
+                <v-icon>remove</v-icon>
             </v-btn>
             <v-btn style="-webkit-app-region: no-drag"
                    icon
+                   @click.native.stop="winControl('maximize')"
+                   v-show="isMaximized"
             >
                 <v-icon style="font-size: 20px;">filter_none</v-icon>
             </v-btn>
-            <!--<v-btn style="-webkit-app-region: no-drag"-->
-                   <!--icon-->
-            <!--&gt;-->
-                <!--<v-icon>crop_square</v-icon>-->
-            <!--</v-btn>-->
             <v-btn style="-webkit-app-region: no-drag"
                    icon
+                   @click.native.stop="winControl('maximize')"
+                   v-show="!isMaximized"
+            >
+                <v-icon>crop_square</v-icon>
+            </v-btn>
+            <v-btn style="-webkit-app-region: no-drag"
+                   icon
+                   @click.native.stop="winControl('close')"
             >
                 <v-icon color="red">close</v-icon>
             </v-btn>
@@ -121,6 +129,9 @@
 </template>
 
 <script>
+    const electron = require('electron');
+    const remote = electron.remote;
+
     import Add from '../add/add'
 
     export default {
@@ -128,7 +139,7 @@
             Add
         },
         data: () => ({
-                         dialogAdd: false,
+            dialogAdd: false,
             drawer: null,
             items: [
                 {heading: 'Home'},
@@ -154,10 +165,34 @@
                 {isSingle: true, icon: 'help', text: 'Lock', to: '/lock'}
             ],
             mini: false,
-            right: null
+            right: null,
+            // 是最大化
+            isMaximized: false,
         }),
         methods: {
-
+winControl(action) {
+    const browserWindow = remote.getCurrentWindow();
+    switch (action) {
+        case 'minimize':
+            browserWindow.minimize()
+            break;
+        case 'maximize':
+            if (this.isMaximized) {
+                // if (browserWindow.isMaximized()) {
+                browserWindow.unmaximize()
+            } else {
+                browserWindow.maximize()
+            }
+            // this.isMaximized = browserWindow.isMaximized()
+            this.isMaximized = !this.isMaximized
+            break;
+        case 'close':
+            browserWindow.close()
+            break;
+        default:
+            break;
+    }
+},
         }
     }
 </script>

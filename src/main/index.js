@@ -1,4 +1,4 @@
-import {app, BrowserWindow} from 'electron'
+import {app, BrowserWindow, Menu} from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -14,16 +14,23 @@ const winURL = process.env.NODE_ENV === 'development'
     : `file://${__dirname}/index.html`
 
 function createWindow() {
+    // 隐藏窗体菜单
+    Menu.setApplicationMenu(null)
     /**
      * Initial window options
      */
     mainWindow = new BrowserWindow({
         height: 1000,
         width: 1600,
+        minWidth: 900,
+        minHeight: 600,
         useContentSize: true,
-        frame: false,
-        transparent: true
+        frame: false, // 无边框
+        transparent: true, // 透明
+        // fullscreen: true, // 全屏
     })
+
+    mainWindow.setMenu(null)
 
     mainWindow.loadURL(winURL)
 
