@@ -76,13 +76,13 @@ npm run lint
 
 - [Electron开发实战之记账软件3——使用UI框架vuetify实现页面](https://my.oschina.net/u/3667677/blog/3040223)
 
-Electron开发实战之记账软件1——使用sharedObject共享数据
+- [Electron开发实战之记账软件4——无边框、窗口关闭、最大最小化、隐藏右键菜单](https://my.oschina.net/u/3667677/blog/3041467)
 
-Electron开发实战之记账软件1——关闭最小化、系统托盘及右键菜单
+- [Electron开发实战之记账软件5——制作ico格式的logo](https://my.oschina.net/u/3667677/blog/3041685)
+
+- [Electron开发实战之记账软件6——自定义系统托盘菜单、闪烁](https://my.oschina.net/u/3667677/blog/3041851)
 
 Electron开发实战之记账软件1——系统通知
-
-Electron开发实战之记账软件1——无边框窗体及自定义导航栏
 
 Electron开发实战之记账软件1——禁用一些事件
 
@@ -93,6 +93,8 @@ Electron开发实战之记账软件1——保证只有一个实例
 Electron开发实战之记账软件1——持续集成
 
 Electron开发实战之记账软件1——自动更新
+
+Electron开发实战之记账软件1——使用sharedObject共享数据
 
 Electron开发实战之记账软件1——轻量级本地JSON数据库LowDB
 

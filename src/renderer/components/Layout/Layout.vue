@@ -11,7 +11,7 @@
                 <v-layout>
                     <v-flex layout justify-center align-center>
                         <!--<v-icon>credit_card</v-icon>-->
-                        <div>PocketBook</div>
+                        <div>{{title}}</div>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -140,6 +140,7 @@
             Add
         },
         data: () => ({
+            title: 'PocketBook',
             dialogAdd: false,
             drawer: null,
             items: [

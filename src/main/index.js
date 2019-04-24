@@ -1,4 +1,4 @@
-import {app, BrowserWindow} from 'electron'
+import {app, BrowserWindow, Menu, shell, Tray} from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -13,6 +13,24 @@ const winURL = process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`
 
+const path = require('path')
+const Title = 'PocketBook'
+// 托盘对象
+let appTray = null
+// 是否可以退出
+let trayClose = false
+// 系统托盘右键菜单
+let trayMenuTemplate
+// 系统托盘图标
+let iconPath
+// 图标的上上下文
+let contextMenu
+// 图标闪烁定时器
+let flashTrayTimer
+
+/**
+ * 创建主窗口
+ */
 function createWindow() {
     /**
      * Initial window options
@@ -30,6 +48,25 @@ function createWindow() {
 
     mainWindow.loadURL(winURL)
 
+    // 为了防止闪烁，让画面准备好了再显示
+    // 对于一个复杂的应用，ready-to-show 可能发出的太晚，会让应用感觉缓慢。 在这种情况下，建议立刻显示窗口，并使用接近应用程序背景的 backgroundColor
+    // 请注意，即使是使用 ready-to-show 事件的应用程序，仍建议使用设置 backgroundColor 使应用程序感觉更原生。
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show()
+    })
+
+    /**
+     * 监听
+     */
+
+    mainWindow.on('close', (event) => {
+        if (!trayClose) {
+            // 最小化
+            mainWindow.hide()
+            event.preventDefault()
+        }
+    })
+
     mainWindow.on('closed', () => {
         mainWindow = null
     })
@@ -37,10 +74,83 @@ function createWindow() {
     mainWindow.on('maximize', () => {
 
     })
-
 }
 
-app.on('ready', createWindow)
+/**
+ * 设置系统托盘
+ */
+function createTray() {
+    // 是否可以退出
+    trayClose = false
+    // 系统托盘右键菜单
+    trayMenuTemplate = [
+        {
+            label: '托盘闪烁',
+            click: function () {
+                // 判断如果上一个定时器是否执行完
+                if(flashTrayTimer) {
+                    return
+                }
+
+                // 任务栏闪烁
+                // if (!mainWindow.isFocused()) {
+                //     mainWindow.showInactive();
+                //     mainWindow.flashFrame(true);
+                // }
+
+                //系统托盘图标闪烁
+                appTray.setImage(`${__static}/iconMessage.ico`)
+                let count = 0;
+                flashTrayTimer = setInterval(function () {
+                    count++;
+                    if (count % 2 == 0) {
+                        appTray.setImage(`${__static}/iconTransparent.ico`)
+                    } else {
+                        appTray.setImage(`${__static}/iconMessage.ico`)
+                    }
+                }, 600);
+            }
+        },
+        {
+            label: '关于项目',
+            click: function () {
+                // 打开外部链接
+                shell.openExternal('https://github.com/hilanmiao/LanMiaoDesktop')
+            }
+        },
+        {
+            label: '退出',
+            click: function () {
+                // 退出
+                trayClose = true
+                app.quit()
+            }
+        }
+    ]
+    // 系统托盘图标
+    iconPath = `${__static}/icon.ico`
+    appTray = new Tray(iconPath)
+    // 图标的上上下文
+    contextMenu = Menu.buildFromTemplate(trayMenuTemplate)
+    // 设置此托盘图标的悬停提示内容
+    appTray.setToolTip(Title)
+    // 设置此图标的上下文菜单
+    appTray.setContextMenu(contextMenu)
+    // 主窗口显示隐藏切换
+    appTray.on('click', () => {
+        // 清楚图标闪烁定时器
+        clearInterval(flashTrayTimer)
+        flashTrayTimer = null
+        // 还原图标
+        appTray.setImage(`${__static}/icon.ico`)
+        mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+    })
+}
+
+app.on('ready',()=>{
+    createWindow()
+    createTray()
+})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
