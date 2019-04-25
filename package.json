@@ -58,7 +58,8 @@
     "vue-router": "^3.0.3",
     "vuetify": "^1.5.11",
     "vuex": "^3.1.0",
-    "vuex-electron": "^1.0.3"
+    "vuex-electron": "^1.0.3",
+    "winreg": "^1.2.4"
   },
   "devDependencies": {
     "@vue/devtools": "^5.0.9",

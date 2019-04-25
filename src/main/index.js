@@ -1,4 +1,7 @@
-import {app, BrowserWindow, Menu, shell, Tray} from 'electron'
+import {app, BrowserWindow, ipcMain, Menu, shell, Tray} from 'electron'
+
+// 引入自动启动模块
+const startOnBoot = require('./startOnBoot.js')
 
 /**
  * Set `__static` path to static files in production
@@ -14,7 +17,7 @@ const winURL = process.env.NODE_ENV === 'development'
     : `file://${__dirname}/index.html`
 
 const path = require('path')
-const Title = 'PocketBook'
+const ApplicationName = 'PocketBook'
 // 托盘对象
 let appTray = null
 // 是否可以退出
@@ -88,7 +91,7 @@ function createTray() {
             label: '托盘闪烁',
             click: function () {
                 // 判断如果上一个定时器是否执行完
-                if(flashTrayTimer) {
+                if (flashTrayTimer) {
                     return
                 }
 
@@ -133,7 +136,7 @@ function createTray() {
     // 图标的上上下文
     contextMenu = Menu.buildFromTemplate(trayMenuTemplate)
     // 设置此托盘图标的悬停提示内容
-    appTray.setToolTip(Title)
+    appTray.setToolTip(ApplicationName)
     // 设置此图标的上下文菜单
     appTray.setContextMenu(contextMenu)
     // 主窗口显示隐藏切换
@@ -147,9 +150,36 @@ function createTray() {
     })
 }
 
-app.on('ready',()=>{
+/**
+ * 开机启动
+ */
+function ipcStartOnBoot() {
+    // 检查是否自动启动
+    ipcMain.on('getAutoStartValue', () => {
+        startOnBoot.getAutoStartValue(ApplicationName, (error, result) => {
+            if (error) {
+                mainWindow.webContents.send('getAutoStartValue', false)
+            } else {
+                mainWindow.webContents.send('getAutoStartValue', true)
+            }
+        })
+    })
+
+    // 设置开机自动启动
+    ipcMain.on('enableAutoStart', () => {
+        startOnBoot.enableAutoStart(ApplicationName, process.execPath)
+    })
+
+    // 取消开机自动启动
+    ipcMain.on('disableAutoStart', () => {
+        startOnBoot.disableAutoStart(ApplicationName)
+    })
+}
+
+app.on('ready', () => {
     createWindow()
     createTray()
+    ipcStartOnBoot()
 })
 
 app.on('window-all-closed', () => {
