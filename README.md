@@ -82,6 +82,8 @@ npm run lint
 
 - [Electron开发实战之记账软件6——自定义系统托盘菜单、闪烁](https://my.oschina.net/u/3667677/blog/3041851)
 
+- [Electron开发实战之记账软件7——开机自动启动](https://my.oschina.net/u/3667677/blog/3042628)
+
 Electron开发实战之记账软件1——系统通知
 
 Electron开发实战之记账软件1——禁用一些事件
