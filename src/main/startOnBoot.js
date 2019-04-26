@@ -32,7 +32,8 @@ var RUN_LOCATION = '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
 // 获取注册表key
 function getKey() {
     return new WinReg({
-        hive: WinReg.HKCU, // CurrentUser,
+        // hive: WinReg.HKCU, // CurrentUser,
+        hive: WinReg.HKLM, // LocalMachine,
         key: RUN_LOCATION
     })
 }
