@@ -30,6 +30,8 @@ let iconPath
 let contextMenu
 // 图标闪烁定时器
 let flashTrayTimer
+// 单一实例
+const gotTheLock = app.requestSingleInstanceLock()
 
 /**
  * 创建主窗口
@@ -176,11 +178,27 @@ function ipcStartOnBoot() {
     })
 }
 
-app.on('ready', () => {
-    createWindow()
-    createTray()
-    ipcStartOnBoot()
-})
+/**
+ * 单一实例
+ */
+if (!gotTheLock) {
+    app.quit()
+} else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // 当运行第二个实例时,将会聚焦到myWindow这个窗口
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore()
+            mainWindow.focus()
+        }
+    })
+
+    // 创建 mainWindow, 加载应用的其余部分, etc...
+    app.on('ready', () => {
+        createWindow()
+        createTray()
+        ipcStartOnBoot()
+    })
+}
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
