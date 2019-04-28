@@ -84,11 +84,11 @@ npm run lint
 
 - [Electron开发实战之记账软件7——开机自动启动](https://my.oschina.net/u/3667677/blog/3042628)
 
-Electron开发实战之记账软件1——系统通知
+- [Electron开发实战之记账软件8——高级通知](https://my.oschina.net/u/3667677/blog/3043443)
 
-Electron开发实战之记账软件1——禁用一些事件
+- [Electron开发实战之记账软件9——禁用一些事件](https://my.oschina.net/u/3667677/blog/3043516)
 
-Electron开发实战之记账软件1——开机自动启动
+- [Electron开发实战之记账软件10——保证只有一个实例](https://my.oschina.net/u/3667677/blog/3043529)
 
 Electron开发实战之记账软件1——保证只有一个实例
 
