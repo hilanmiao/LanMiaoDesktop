@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "hilanmiao <hilanmiao@126.com>",
   "description": "An electron-vue project",
-  "license": null,
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -17,8 +17,9 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "hi",
-    "appId": "com.example.yourapp",
+    "productName": "PocketBook",
+    "appId": "com.electron.PocketBook",
+    "copyright": "Copyright © 2019 lanmiao ",
     "directories": {
       "output": "build"
     },
@@ -45,7 +46,12 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "requestedExecutionLevel": "highestAvailable"
+      "requestedExecutionLevel": "highestAvailable",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick":false,
+      "allowToChangeInstallationDirectory": true
     },
     "linux": {
       "icon": "build/icons"
