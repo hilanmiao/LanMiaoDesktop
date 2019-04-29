@@ -97,9 +97,9 @@ npm run lint
 
 - [Electron开发实战之记账软件10——保证只有一个实例](https://my.oschina.net/u/3667677/blog/3043529)
 
-- [Electron开发实战之记账软件11——打包](https://my.oschina.net/u/3667677/blog/3043986)
+- [Electron开发实战之记账软件11——打包及美化](https://my.oschina.net/u/3667677/blog/3043986)
 
-Electron开发实战之记账软件1——持续集成
+- [Electron开发实战之记账软件12——通过CI系统自动构建与发布](https://my.oschina.net/u/3667677/blog/3044025)
 
 Electron开发实战之记账软件1——自动更新
 
