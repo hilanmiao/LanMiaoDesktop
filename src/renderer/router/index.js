@@ -12,7 +12,7 @@ export default new Router({
             component: require('@/components/Layout/Layout').default,
             children: [{
                 path: 'home',
-                component: require('@/views/home/home').default
+                component: require('@/views/Home/Home').default
             }]
         },
         {
