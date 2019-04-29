@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, Menu, shell, Tray} from 'electron'
+import {app, BrowserWindow, ipcMain, Menu, shell, Tray, Notification} from 'electron'
 
 // 引入自动启动模块
 const startOnBoot = require('./startOnBoot.js')
@@ -32,6 +32,10 @@ let contextMenu
 let flashTrayTimer
 // 单一实例
 const gotTheLock = app.requestSingleInstanceLock()
+
+if (process.platform === 'win32') {
+    app.setAppUserModelId(ApplicationName)
+}
 
 /**
  * 创建主窗口
@@ -114,6 +118,24 @@ function createTray() {
                         appTray.setImage(`${__static}/iconMessage.ico`)
                     }
                 }, 600);
+            }
+        },
+        {
+            label: '弹出通知',
+            click: function () {
+                console.log(Notification.isSupported())
+                let notification = new Notification({
+                    title: '通知的标题', // 通知的标题, 将在通知窗口的顶部显示
+                    body: '通知的正文文本', // 通知的正文文本, 将显示在标题或副标题下面
+                    icon: iconPath, // 用于在该通知上显示的图标
+                    silent: true, // 在显示通知时是否发出系统提示音
+                })
+
+                notification.show()
+                notification.on('click' ,()=>{
+                    notification.close()
+                    console.log('click notification')
+                })
             }
         },
         {
