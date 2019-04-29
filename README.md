@@ -1,6 +1,13 @@
 # LanMiaoDesktop
 
-_**以前的代码比较老了，也没有太多的内容，所以直接覆盖了。**_
+<p align="center">
+  <img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/logo.png">
+</p>
+<p align="center">
+  <a href="https://travis-ci.org/hilanmiao/LanMiaoDesktop/builds">
+    <img src="https://travis-ci.org/hilanmiao/LanMiaoDesktop.svg?branch=master" alt="">
+  </a>
+</p>
 
 ## 概述
 
