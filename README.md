@@ -7,6 +7,9 @@
   <a href="https://travis-ci.org/hilanmiao/LanMiaoDesktop/builds">
     <img src="https://travis-ci.org/hilanmiao/LanMiaoDesktop.svg?branch=master" alt="">
   </a>
+  <a href="https://github.com/hilanmiao/LanMiaoDesktop/blob/master/LICENSE">
+      <img src="https://img.shields.io/github/license/hilanmiao/LanMiaoDesktop.svg" alt="">
+    </a>
 </p>
 
 ## 概述
