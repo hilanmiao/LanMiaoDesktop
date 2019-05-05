@@ -104,6 +104,8 @@ npm run lint
 
 - [Electron开发实战之记账软件12——通过CI系统自动构建与发布](https://my.oschina.net/u/3667677/blog/3044025)
 
+- [Electron开发实战之记账软件13——添加Github徽章](https://my.oschina.net/u/3667677/blog/3044255)
+
 Electron开发实战之记账软件1——自动更新
 
 Electron开发实战之记账软件1——使用sharedObject共享数据
