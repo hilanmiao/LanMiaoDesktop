@@ -65,6 +65,10 @@
             notifications: true,
             showErrorSetting: false
         }),
+        destroyed() {
+            // 移除事件监听
+            ipcRenderer.removeAllListeners('getAutoStartValue')
+        },
         mounted() {
             this.getAutoStartValue()
         },

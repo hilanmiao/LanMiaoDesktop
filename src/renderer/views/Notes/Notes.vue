@@ -17,13 +17,13 @@
                     </v-progress-circular>
                 </v-flex>
                 <v-flex class="text-xs-left" v-show="showError">
-                    <v-alert type="error" :value="showError" transition="scale-transition">
+                    <v-alert type="error" v-model="showError" transition="scale-transition">
                         更新出错
                     </v-alert>
                 </v-flex>
             </v-layout>
         </v-flex>
-        <v-flex xs7>
+        <v-flex xs7 class="pl-5">
             <h1>ReleaseNotes：</h1>
             <v-layout column class="pl-5">
                 <v-flex :key="key" v-for="(item, key) in versionInfoList">
@@ -45,22 +45,13 @@
             downloadPercent: 0,
             showError: false,
             info: '',
-            versionInfoList: [{
-                "version": "0.0.2",
-                "files": [
-                    {
-                        "url": "hilanmiao-setup-0.0.2.exe",
-                        "sha512": "4YPiylv4SJS+Clazm93ccpntpy3pbT+dT0/iwsCstk+T4whsRxTRtjsmN7jnU+kAVBmYohS/zwlUtW+5S1HrZw==",
-                        "size": 42857006
-                    }
-                ],
-                "path": "hilanmiao-setup-0.0.2.exe",
-                "sha512": "4YPiylv4SJS+Clazm93ccpntpy3pbT+dT0/iwsCstk+T4whsRxTRtjsmN7jnU+kAVBmYohS/zwlUtW+5S1HrZw==",
-                "releaseDate": "2019-05-05T14:14:24.623Z",
-                "releaseName": "0.0.2",
-                "releaseNotes": "<h1>Bug fixes</h1>\n<ul>\n<li>修复xxxx</li>\n<li>修复xxxxx</li>\n</ul>"
-            }]
+            versionInfoList: []
         }),
+        destroyed() {
+            // 移除事件监听
+            ipcRenderer.removeAllListeners('updateMessage')
+            ipcRenderer.removeAllListeners('downloadProgress')
+        },
         mounted() {
             this.versionInfoList = this.getVersionInfoList()
             this.checkForUpdate()
@@ -71,15 +62,15 @@
             },
             saveVersionInfoList(updateInfo) {
                 let versionInfoListOri = this.getVersionInfoList()
-                versionInfoListOri.foreach((item, index, array) => {
-                    // 判断是不是已经存在这个版本的信息,如果存在就替换它
+                versionInfoListOri.some((item, index, array) => {
+                    // 判断是不是已经存在这个版本的信息,如果存在就删除它
                     if (updateInfo.version === item.version) {
-                        array[index] = updateInfo
-                    } else {
-                        // 将新的版本信息加入列表中
-                        array.push(updateInfo)
+                        array.splice(index,1)
+                        return true
                     }
                 })
+                // 将新的版本信息加入列表中
+                versionInfoListOri.push(updateInfo)
                 localStorage.setItem('versionInfoList', JSON.stringify(versionInfoListOri))
             },
             downloadAndUpdate() {
@@ -89,9 +80,9 @@
                     // console.log(progressObj)
                     this.downloadPercent = progressObj.percent.toFixed(0) || 0
                 })
-                ipcRenderer.on('isUpdateNow', () => {
-                    ipcRenderer.send('isUpdateNow')
-                })
+                // ipcRenderer.on('isUpdateNow', () => {
+                //     ipcRenderer.send('isUpdateNow')
+                // })
             },
             checkForUpdate() {
                 // 开始检查
@@ -100,14 +91,12 @@
                 ipcRenderer.on('updateMessage', (event, obj) => {
                     if (obj.action === 'updateAva') {
                         this.hasNewVersion = true
-                        // this.saveVersionInfoList(obj.updateInfo)
-                        // this.versionInfoList = this.getVersionInfoList()
+                        this.saveVersionInfoList(obj.updateInfo)
+                        this.versionInfoList = this.getVersionInfoList()
                     } else if (obj.action === 'error') {
                         this.showError = true
                     } else {
                         // console.log(text)
-                        this.saveVersionInfoList(obj.updateInfo)
-                        this.versionInfoList = this.getVersionInfoList()
                     }
                 })
             },
@@ -116,20 +105,5 @@
 </script>
 
 <style scoped>
-    /*@import "../../assets/font/font.css";*/
 
-    /*.container {*/
-    /*font-size: 20px;*/
-    /*h1 {*/
-    /*font-family mincho*/
-    /*}*/
-
-    /*li {*/
-    /*font-family yanqu;*/
-    /*}*/
-    /*}*/
-
-    /*.container {*/
-    /*padding-top: 75px;*/
-    /*}*/
 </style>

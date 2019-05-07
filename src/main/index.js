@@ -229,25 +229,11 @@ function autoUpdate() {
     // 当开始检查更新的时候触发
     autoUpdater.on('checking-for-update', () => {
         // sendUpdateMessage('checking')
-        // sendUpdateMessage({action: 'checking'})
-        sendUpdateMessage({action: 'checking', updateInfo: {"version": "0.0.2",
-                "files": [
-                    {
-                        "url": "hilanmiao-setup-0.0.2.exe",
-                        "sha512": "4YPiylv4SJS+Clazm93ccpntpy3pbT+dT0/iwsCstk+T4whsRxTRtjsmN7jnU+kAVBmYohS/zwlUtW+5S1HrZw==",
-                        "size": 42857006
-                    }
-                ],
-                "path": "hilanmiao-setup-0.0.2.exe",
-                "sha512": "4YPiylv4SJS+Clazm93ccpntpy3pbT+dT0/iwsCstk+T4whsRxTRtjsmN7jnU+kAVBmYohS/zwlUtW+5S1HrZw==",
-                "releaseDate": "2019-05-05T14:14:24.623Z",
-                "releaseName": "0.0.2",
-                "releaseNotes": "<h1>Bug fixes</h1>\n<ul>\n<li>修复xxxx</li>\n<li>修复xxxxx</li>\n</ul>"}})
+        sendUpdateMessage({action: 'checking'})
     })
 
     // 当发现一个可用更新的时候触发，更新下载包会自动开始
     autoUpdater.autoDownload = false
-
     autoUpdater.on('update-available', (info) => {
         // sendUpdateMessage('updateAva')
         sendUpdateMessage({action: 'updateAva', updateInfo: info})
@@ -272,11 +258,13 @@ function autoUpdate() {
      * updateUrl String - 更新地址
      */
     autoUpdater.on('update-downloaded', (info) => {
-        ipcMain.on('isUpdateNow', (e, arg) => {
-            // some code here to handle event
-            autoUpdater.quitAndInstall()
-        })
-        mainWindow.webContents.send('isUpdateNow')
+        autoUpdater.quitAndInstall()
+        // 可以手动选择是否立即退出并更新
+        // ipcMain.on('isUpdateNow', (e, arg) => {
+        //     // some code here to handle event
+        //     autoUpdater.quitAndInstall()
+        // })
+        // mainWindow.webContents.send('isUpdateNow')
     })
 
     ipcMain.on('checkForUpdate', () => {
@@ -324,23 +312,3 @@ app.on('activate', () => {
         createWindow()
     }
 })
-
-/**
- * Auto Updater
- *
- * Uncomment the following code below and install `electron-updater` to
- * support auto updating. Code Signing with a valid certificate is required.
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
- */
-
-/*
-import { autoUpdater } from 'electron-updater'
-
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
-})
-
-app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
-})
- */
