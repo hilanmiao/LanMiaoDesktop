@@ -1,5 +1,8 @@
 import {app, BrowserWindow, ipcMain, Menu, shell, Tray, Notification} from 'electron'
 
+// 自动更新相关
+import {autoUpdater} from 'electron-updater'
+
 // 引入自动启动模块
 const startOnBoot = require('./startOnBoot.js')
 
@@ -132,7 +135,7 @@ function createTray() {
                 })
 
                 notification.show()
-                notification.on('click' ,()=>{
+                notification.on('click', () => {
                     notification.close()
                     console.log('click notification')
                 })
@@ -201,6 +204,93 @@ function ipcStartOnBoot() {
 }
 
 /**
+ * 自动更新
+ */
+function autoUpdate() {
+    // 通过main进程发送事件给renderer进程，提示更新信息
+    function sendUpdateMessage(obj) {
+        mainWindow.webContents.send('updateMessage', obj)
+    }
+
+    // 监测更新，在你想要检查更新的时候执行，renderer事件触发后的操作自行编写
+    const message = {
+        error: '检查更新出错',
+        checking: '正在检查更新......',
+        updateAva: '监测到新版本，正在下载......',
+        updateNotAva: '现在使用的就是最新版本，不用下载'
+    }
+
+    // 当更新出现错误时触发
+    autoUpdater.on('error', (err) => {
+        // sendUpdateMessage('error')
+        sendUpdateMessage({action: 'error'})
+    })
+
+    // 当开始检查更新的时候触发
+    autoUpdater.on('checking-for-update', () => {
+        // sendUpdateMessage('checking')
+        // sendUpdateMessage({action: 'checking'})
+        sendUpdateMessage({action: 'checking', updateInfo: {"version": "0.0.2",
+                "files": [
+                    {
+                        "url": "hilanmiao-setup-0.0.2.exe",
+                        "sha512": "4YPiylv4SJS+Clazm93ccpntpy3pbT+dT0/iwsCstk+T4whsRxTRtjsmN7jnU+kAVBmYohS/zwlUtW+5S1HrZw==",
+                        "size": 42857006
+                    }
+                ],
+                "path": "hilanmiao-setup-0.0.2.exe",
+                "sha512": "4YPiylv4SJS+Clazm93ccpntpy3pbT+dT0/iwsCstk+T4whsRxTRtjsmN7jnU+kAVBmYohS/zwlUtW+5S1HrZw==",
+                "releaseDate": "2019-05-05T14:14:24.623Z",
+                "releaseName": "0.0.2",
+                "releaseNotes": "<h1>Bug fixes</h1>\n<ul>\n<li>修复xxxx</li>\n<li>修复xxxxx</li>\n</ul>"}})
+    })
+
+    // 当发现一个可用更新的时候触发，更新下载包会自动开始
+    autoUpdater.autoDownload = false
+
+    autoUpdater.on('update-available', (info) => {
+        // sendUpdateMessage('updateAva')
+        sendUpdateMessage({action: 'updateAva', updateInfo: info})
+    })
+
+    // 当没有可用更新的时候触发
+    autoUpdater.on('update-not-available', (info) => {
+        // sendUpdateMessage('updateNotAva')
+        sendUpdateMessage({action: 'updateNotAva'})
+    })
+
+    // 更新下载进度事件
+    autoUpdater.on('download-progress', (progressObj) => {
+        mainWindow.webContents.send('downloadProgress', progressObj)
+    })
+
+    /**
+     * event Event
+     * releaseNotes String - 新版本更新公告
+     * releaseName String - 新的版本号
+     * releaseDate Date - 新版本发布的日期
+     * updateUrl String - 更新地址
+     */
+    autoUpdater.on('update-downloaded', (info) => {
+        ipcMain.on('isUpdateNow', (e, arg) => {
+            // some code here to handle event
+            autoUpdater.quitAndInstall()
+        })
+        mainWindow.webContents.send('isUpdateNow')
+    })
+
+    ipcMain.on('checkForUpdate', () => {
+        // 执行自动更新检查
+        autoUpdater.checkForUpdates()
+    })
+
+    ipcMain.on('downloadUpdate', () => {
+        // 下载
+        autoUpdater.downloadUpdate()
+    })
+}
+
+/**
  * 单一实例
  */
 if (!gotTheLock) {
@@ -219,6 +309,7 @@ if (!gotTheLock) {
         createWindow()
         createTray()
         ipcStartOnBoot()
+        autoUpdate()
     })
 }
 

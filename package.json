@@ -1,6 +1,6 @@
 {
   "name": "hilanmiao",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "author": "hilanmiao <hilanmiao@126.com>",
   "description": "An electron-vue project",
   "license": "MIT",
@@ -23,6 +23,12 @@
     "copyright": "Copyright © 2019 lanmiao ",
     "directories": {
       "output": "build"
+    },
+    "publish": {
+      "provider": "github",
+      "repo": "LanMiaoDesktop",
+      "owner": "hilanmiao",
+      "releaseType": "release"
     },
     "files": [
       "dist/electron/**/*"
@@ -60,6 +66,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "electron-updater": "^4.0.6",
     "material-design-icons-iconfont": "^4.0.5",
     "vue": "^2.6.10",
     "vue-electron": "^1.0.6",
