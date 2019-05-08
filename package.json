@@ -1,6 +1,6 @@
 {
   "name": "PocketBook",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "hilanmiao <hilanmiao@126.com>",
   "description": "An electron-vue project",
   "license": "MIT",
@@ -20,7 +20,7 @@
   "build": {
     "productName": "PocketBook",
     "appId": "com.electron.PocketBook",
-    "copyright": "Copyright © 2019 lanmiao ",
+    "copyright": "Copyright © 2019 lanmiao",
     "directories": {
       "output": "build"
     },
