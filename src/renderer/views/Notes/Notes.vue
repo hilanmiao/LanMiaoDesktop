@@ -1,23 +1,37 @@
 <template>
     <v-layout row wrap>
         <v-flex xs4>
-            <v-layout column wrap text-xs-center>
+            <v-layout column wrap text-xs-left>
                 <v-flex>
                     <v-btn color="info"
                            @click="checkForUpdate()">
                         Check for updates
+                        <v-icon right>new_releases</v-icon>
                     </v-btn>
+                </v-flex>
+                <v-flex class="title" v-show="noNewVersion">
+                    <v-icon>thumb_up</v-icon> Already the latest version
                 </v-flex>
                 <v-flex v-show="hasNewVersion">
                     <v-btn color="info"
                            :loading="downloading"
                            :disabled="downloading"
                            @click="downloadAndUpdate">
-                        Download new version！
+                        Download new version
+                        <v-icon right>cloud_download</v-icon>
                         <template v-slot:loader>
                             <span>Loading...</span>
                         </template>
                     </v-btn>
+                    <v-progress-circular
+                            :size="100"
+                            :width="15"
+                            :rotate="-90"
+                            :value="downloadPercent"
+                            color="primary"
+                    >
+                        {{ downloadPercent }}
+                    </v-progress-circular>
                     <v-dialog
                             v-model="downloading"
                             persistent
@@ -50,20 +64,9 @@
                         </v-card>
                     </v-dialog>
                 </v-flex>
-                <v-flex v-show="hasNewVersion">
-                    <v-progress-circular
-                            :size="100"
-                            :width="15"
-                            :rotate="-90"
-                            :value="downloadPercent"
-                            color="primary"
-                    >
-                        {{ downloadPercent }}
-                    </v-progress-circular>
-                </v-flex>
                 <v-flex class="text-xs-left" v-show="showError">
                     <v-alert type="error" v-model="showError" transition="scale-transition">
-                        update error
+                        error info {{errorInfo}}
                     </v-alert>
                 </v-flex>
             </v-layout>
@@ -89,15 +92,17 @@
             dialogUpdateNow: false,
             downloading: false,
             hasNewVersion: false,
+            noNewVersion: false,
             downloadPercent: 0,
             showError: false,
-            info: '',
+            errorInfo: {},
             versionInfoList: []
         }),
         destroyed() {
             // 移除事件监听
             ipcRenderer.removeAllListeners('updateMessage')
             ipcRenderer.removeAllListeners('downloadProgress')
+            ipcRenderer.removeAllListeners('isUpdateNow')
         },
         mounted() {
             this.versionInfoList = this.getVersionInfoList()
@@ -126,10 +131,11 @@
                 // 开始下载
                 ipcRenderer.send('downloadUpdate')
                 ipcRenderer.on('downloadProgress', (event, progressObj) => {
+                    this.progress = JSON.stringify(progressObj)
                     // console.log(progressObj)
                     this.downloadPercent = progressObj.percent.toFixed(0) || 0
-
-                    if(this.downloadPercent = 100) {
+                    // if(this.downloadPercent === 100) { // 这样写为啥不好使呢？
+                    if(progressObj.percent === 100) {
                         this.downloading = false
                         // 询问是否立即更新
                         this.dialogUpdateNow = true
@@ -137,9 +143,8 @@
                 })
             },
             updateNow() {
-                ipcRenderer.on('isUpdateNow', () => {
-                    ipcRenderer.send('isUpdateNow')
-                })
+                // 立刻退出并更新
+               ipcRenderer.send('isUpdateNow')
             },
             checkForUpdate() {
                 // 开始检查
@@ -152,6 +157,9 @@
                         this.versionInfoList = this.getVersionInfoList()
                     } else if (obj.action === 'error') {
                         this.showError = true
+                        this.errorInfo = obj.errorInfo
+                    } else if(obj.action ==='updateNotAva') {
+                        this.noNewVersion = true
                     } else {
                         // console.log(text)
                     }

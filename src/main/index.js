@@ -223,7 +223,7 @@ function autoUpdate() {
     // 当更新出现错误时触发
     autoUpdater.on('error', (err) => {
         // sendUpdateMessage('error')
-        sendUpdateMessage({action: 'error'})
+        sendUpdateMessage({action: 'error', errorInfo: err})
     })
 
     // 当开始检查更新的时候触发
@@ -242,7 +242,7 @@ function autoUpdate() {
     // 当没有可用更新的时候触发
     autoUpdater.on('update-not-available', (info) => {
         // sendUpdateMessage('updateNotAva')
-        sendUpdateMessage({action: 'updateNotAva'})
+        sendUpdateMessage({action: 'updateNotAva', updateInfo: info})
     })
 
     // 更新下载进度事件
@@ -258,6 +258,8 @@ function autoUpdate() {
      * updateUrl String - 更新地址
      */
     autoUpdater.on('update-downloaded', (info) => {
+        // 下载太快可能无法触发downloadProgress事件，所以手动通知一下
+        mainWindow.webContents.send('downloadProgress', {percent: 100})
         // 可以手动选择是否立即退出并更新
         ipcMain.on('isUpdateNow', (e, arg) => {
             // some code here to handle event
