@@ -258,13 +258,11 @@ function autoUpdate() {
      * updateUrl String - 更新地址
      */
     autoUpdater.on('update-downloaded', (info) => {
-        autoUpdater.quitAndInstall()
         // 可以手动选择是否立即退出并更新
-        // ipcMain.on('isUpdateNow', (e, arg) => {
-        //     // some code here to handle event
-        //     autoUpdater.quitAndInstall()
-        // })
-        // mainWindow.webContents.send('isUpdateNow')
+        ipcMain.on('isUpdateNow', (e, arg) => {
+            // some code here to handle event
+            autoUpdater.quitAndInstall()
+        })
     })
 
     ipcMain.on('checkForUpdate', () => {

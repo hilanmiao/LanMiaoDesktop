@@ -2,8 +2,53 @@
     <v-layout row wrap>
         <v-flex xs4>
             <v-layout column wrap text-xs-center>
+                <v-flex>
+                    <v-btn color="info"
+                           @click="checkForUpdate()">
+                        Check for updates
+                    </v-btn>
+                </v-flex>
                 <v-flex v-show="hasNewVersion">
-                    <v-btn color="info" @click="downloadAndUpdate">有新版本，请下载更新！</v-btn>
+                    <v-btn color="info"
+                           :loading="downloading"
+                           :disabled="downloading"
+                           @click="downloadAndUpdate">
+                        Download new version！
+                        <template v-slot:loader>
+                            <span>Loading...</span>
+                        </template>
+                    </v-btn>
+                    <v-dialog
+                            v-model="downloading"
+                            persistent
+                            width="300"
+                    >
+                        <v-card
+                                color="primary"
+                                dark
+                        >
+                            <v-card-text>
+                                Please wait a moment
+                                <v-progress-linear
+                                        indeterminate
+                                        color="white"
+                                        class="mb-0"
+                                ></v-progress-linear>
+                            </v-card-text>
+                        </v-card>
+                    </v-dialog>
+                    <v-dialog v-model="dialogUpdateNow" persistent max-width="290">
+                        <v-card>
+                            <v-card-title class="headline">update immediately?</v-card-title>
+                            <v-card-text>The installation package has been downloaded. Is it updated immediately?
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="blue darken-1" flat @click="dialogUpdateNow = false">Disagree</v-btn>
+                                <v-btn color="blue darken-1" flat @click="updateNow()">Agree</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
                 </v-flex>
                 <v-flex v-show="hasNewVersion">
                     <v-progress-circular
@@ -18,7 +63,7 @@
                 </v-flex>
                 <v-flex class="text-xs-left" v-show="showError">
                     <v-alert type="error" v-model="showError" transition="scale-transition">
-                        更新出错
+                        update error
                     </v-alert>
                 </v-flex>
             </v-layout>
@@ -41,6 +86,8 @@
 
     export default {
         data: () => ({
+            dialogUpdateNow: false,
+            downloading: false,
             hasNewVersion: false,
             downloadPercent: 0,
             showError: false,
@@ -65,7 +112,7 @@
                 versionInfoListOri.some((item, index, array) => {
                     // 判断是不是已经存在这个版本的信息,如果存在就删除它
                     if (updateInfo.version === item.version) {
-                        array.splice(index,1)
+                        array.splice(index, 1)
                         return true
                     }
                 })
@@ -74,15 +121,25 @@
                 localStorage.setItem('versionInfoList', JSON.stringify(versionInfoListOri))
             },
             downloadAndUpdate() {
+                this.downloading = true
+
                 // 开始下载
                 ipcRenderer.send('downloadUpdate')
                 ipcRenderer.on('downloadProgress', (event, progressObj) => {
                     // console.log(progressObj)
                     this.downloadPercent = progressObj.percent.toFixed(0) || 0
+
+                    if(this.downloadPercent = 100) {
+                        this.downloading = false
+                        // 询问是否立即更新
+                        this.dialogUpdateNow = true
+                    }
                 })
-                // ipcRenderer.on('isUpdateNow', () => {
-                //     ipcRenderer.send('isUpdateNow')
-                // })
+            },
+            updateNow() {
+                ipcRenderer.on('isUpdateNow', () => {
+                    ipcRenderer.send('isUpdateNow')
+                })
             },
             checkForUpdate() {
                 // 开始检查
