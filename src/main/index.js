@@ -1,10 +1,13 @@
-import {app, BrowserWindow, ipcMain, Menu, shell, Tray, Notification} from 'electron'
+import {app, BrowserWindow, ipcMain, Menu, shell, Tray, Notification, dialog, crashReporter} from 'electron'
 
 // 自动更新相关
 import {autoUpdater} from 'electron-updater'
 
 // 引入自动启动模块
 const startOnBoot = require('./startOnBoot.js')
+
+// 崩溃报告
+import * as Sentry from '@sentry/electron'
 
 /**
  * Set `__static` path to static files in production
@@ -96,6 +99,20 @@ function createTray() {
     trayClose = false
     // 系统托盘右键菜单
     trayMenuTemplate = [
+        {
+            label: '崩溃报告测试 process.crash()',
+            click: function () {
+                console.log('process.crash()')
+                process.crash()
+            }
+        },
+        {
+            label: '崩溃报告测试throw new Error',
+            click: function () {
+                console.log('Error test in main progress')
+                throw new Error('Error test in main progress')
+            }
+        },
         {
             label: '托盘闪烁',
             click: function () {
@@ -278,6 +295,63 @@ function autoUpdate() {
     })
 }
 
+function crashReport() {
+    // 报告常规错误
+    Sentry.init({
+        dsn: 'https://8e0258fcf49d43d09d9fe7c6a0c8ea80@sentry.io/1455801',
+    })
+
+    // 报告系统错误
+    crashReporter.start({
+        companyName: 'lanmiao',
+        productName: 'LanMiaoDesktop',
+        ignoreSystemCrashHandler: true,
+        submitURL: 'https://sentry.io/api/1455801/minidump/?sentry_key=8e0258fcf49d43d09d9fe7c6a0c8ea80'
+    })
+
+    // 渲染进程崩溃事件
+    mainWindow.webContents.on('crashed', ()=>{
+        const options = {
+            type: 'error',
+            title: '进程崩溃了',
+            message: '这个进程已经崩溃.',
+            buttons: ['重载', '退出'],
+        };
+        recordCrash().then(() => {
+            dialog.showMessageBox(options, (index) => {
+                if (index === 0) {
+                    reloadWindow(mainWindow)
+                } else {
+                    app.quit()
+                }
+            });
+        }).catch((e) => {
+            console.log('err', e)
+        });
+    })
+
+    function recordCrash() {
+        return new Promise(resolve => {
+            // 崩溃日志请求成功....
+            resolve();
+        })
+    }
+
+    function reloadWindow(mainWin) {
+        if (mainWin.isDestroyed()) {
+            app.relaunch();
+            app.exit(0);
+        } else {
+            BrowserWindow.getAllWindows().forEach((w) => {
+                if (w.id !== mainWin.id) {
+                    w.destroy()
+                }
+            });
+            mainWin.reload();
+        }
+    }
+}
+
 /**
  * 单一实例
  */
@@ -298,6 +372,7 @@ if (!gotTheLock) {
         createTray()
         ipcStartOnBoot()
         autoUpdate()
+        crashReport()
     })
 }
 

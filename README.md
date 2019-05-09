@@ -108,6 +108,8 @@ npm run lint
 
 - [Electron开发实战之记账软件14——自动更新](https://my.oschina.net/u/3667677/blog/3046786)
 
+- [Electron开发实战之记账软件15——崩溃报告](https://my.oschina.net/u/3667677/blog/3047628)
+
 Electron开发实战之记账软件1——使用sharedObject共享数据
 
 Electron开发实战之记账软件1——轻量级本地JSON数据库LowDB
