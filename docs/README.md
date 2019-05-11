@@ -1,4 +1,3 @@
-# PocketBook
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/logo.png">
