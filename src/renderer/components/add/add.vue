@@ -6,11 +6,11 @@
                 bottom
                 right
                 fab
-                @click="dialog = true"
+                @click="dialogShow = true"
         >
             <v-icon>add</v-icon>
         </v-btn>
-        <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-dialog v-model="dialogShow" max-width="600px">
             <v-card>
                 <v-card-title>
                     <span class="headline">User Profile</span>
@@ -40,8 +40,8 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-                    <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
+                    <v-btn color="blue darken-1" flat @click="dialogShow = false">Close</v-btn>
+                    <v-btn color="blue darken-1" flat @click="dialogShow = false">Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -49,18 +49,41 @@
 </template>
 
 <script>
+    import {mapActions} from 'vuex'
+
     export default {
-        props: {
-            dialog: {
-                type: Boolean,
-                required: true,
-                default: false
-            }
-        },
         name: "add",
         data: () => ({
-            // dialog: false
-        })
+            dialogShow: false
+        }),
+        watch: {
+            '$store.state.dialogAdd.dialogAddShow'(newVal) {
+                this.dialogShow = newVal
+            },
+            dialogShow(newVal) {
+                this.updateDialog(newVal)
+            }
+        },
+        // computed: {
+        //     dialogShow: {
+        //         get() {
+        //             console.log('computed get ')
+        //             return this.$store.getters.dialogAddShow
+        //         },
+        //         set(value) {
+        //             alert('computed set ' + value)
+        //             this.updateDialog(value)
+        //         }
+        //     }
+        // },
+        mounted() {
+
+        },
+        methods: {
+            ...mapActions([
+                'updateDialog',
+            ]),
+        }
     }
 </script>
 

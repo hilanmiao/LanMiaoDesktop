@@ -7,7 +7,9 @@
                 :mini-variant="mini"
         >
             <v-container fluid display-1 font-weight-black text-uppercase
-                         style="-webkit-user-select: none;-webkit-app-region: drag">
+                         style="-webkit-user-select: none;-webkit-app-region: drag"
+            v-show="!mini"
+            >
                 <v-layout>
                     <v-flex layout justify-center align-center>
                         <!--<v-icon>credit_card</v-icon>-->
@@ -29,8 +31,8 @@
                                 {{ item.heading }}
                             </v-subheader>
                         </v-flex>
-                        <v-flex xs6 class="text-xs-right" v-if="item.heading === 'Home'">
-                            <v-btn small flat color="orange">Add</v-btn>
+                        <v-flex xs6 class="text-xs-right" v-if="item.heading === 'Home'" v-show="!mini">
+                            <v-btn small flat color="orange" @click="updateDialog(true)">Add</v-btn>
                         </v-flex>
                     </v-layout>
                     <v-divider
@@ -82,6 +84,20 @@
                         </v-list-tile>
                     </v-list-group>
                 </template>
+                <v-list-tile
+                        class="nav-item-logout"
+                        @click="logout"
+                        active-class="orange"
+                >
+                    <v-list-tile-action>
+                        <v-icon>exit_to_app</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title>
+                            Logout
+                        </v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
             </v-list>
         </v-navigation-drawer>
         <v-toolbar app fixed dense>
@@ -121,7 +137,7 @@
             <v-container fluid fill-height grid-list-md>
                 <router-view></router-view>
             </v-container>
-            <Add :dialog="dialogAdd"></Add>
+            <Add></Add>
         </v-content>
         <v-footer app fixed inset>
             <span>&copy; 2019</span>
@@ -133,7 +149,10 @@
     const electron = require('electron');
     const remote = electron.remote;
 
+    import {mapActions} from 'vuex'
+    import {ipcRenderer} from 'electron'
     import Add from '../add/add'
+
 
     export default {
         components: {
@@ -141,7 +160,6 @@
         },
         data: () => ({
             title: 'PocketBook',
-            dialogAdd: false,
             drawer: null,
             items: [
                 {heading: 'Home'},
@@ -171,7 +189,21 @@
             // 是最大化
             isMaximized: false,
         }),
+        // computed: {
+        //     dialogAdd: {
+        //         get() {
+        //             return this.$store.getters.dialogAddShow
+        //         },
+        //         set(value) {
+        //             alert('layout set ' + value)
+        //             this.updateDialog(value)
+        //         }
+        //     }
+        // },
         methods: {
+            ...mapActions([
+                'updateDialog',
+            ]),
             winControl(action) {
                 const browserWindow = remote.getCurrentWindow()
                 switch (action) {
@@ -200,6 +232,9 @@
                         break;
                 }
             },
+            logout() {
+                ipcRenderer.send('openLoginWindow')
+            }
         }
     }
 </script>
@@ -209,5 +244,11 @@
     .primary--text {
         color: orange !important;
         caret-color: orange !important;
+    }
+
+    .nav-item-logout {
+        position: fixed;
+        bottom: 0;
+        width:100%
     }
 </style>
