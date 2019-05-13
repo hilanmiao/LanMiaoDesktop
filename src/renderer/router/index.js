@@ -6,6 +6,11 @@ Vue.use(Router)
 export default new Router({
     routes: [
         {
+            path: '/login',
+            name: 'login',
+            component: require('@/views/Login/Login').default
+        },
+        {
             path: '/',
             name: 'home',
             redirect: '/home',
@@ -43,16 +48,6 @@ export default new Router({
             children: [{
                 path: 'help',
                 component: require('@/views/Help/Help').default
-            }]
-        },
-        {
-            path: '/login',
-            name: 'login',
-            redirect: '/login/login',
-            component: require('@/components/Layout/Layout').default,
-            children: [{
-                path: 'login',
-                component: require('@/views/Login/Login').default
             }]
         },
         {

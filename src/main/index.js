@@ -9,6 +9,9 @@ const startOnBoot = require('./startOnBoot.js')
 // 崩溃报告
 import * as Sentry from '@sentry/electron'
 
+// package.json
+import pkg from '../../package.json'
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -17,13 +20,17 @@ if (process.env.NODE_ENV !== 'development') {
     global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-let mainWindow
+let mainWindow, loginWindow
 const winURL = process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`
 
+const loginURL = process.env.NODE_ENV === 'development'
+    ? `http://localhost:9080/#login`
+    : `file://${__dirname}/index.html#login`
+
 const path = require('path')
-const ApplicationName = 'PocketBook'
+const ApplicationName = pkg.name
 // 托盘对象
 let appTray = null
 // 是否可以退出
@@ -46,11 +53,78 @@ if (process.platform === 'win32') {
 /**
  * 创建主窗口
  */
-function createWindow() {
+function createLoginWindow() {
+    if (loginWindow) {
+        return
+    }
+
+    /**
+     * Initial window options
+     */
+    loginWindow = new BrowserWindow({
+        show: true,
+        height: 360,
+        width: 300,
+        maxHeight: 360,
+        maxWidth: 300,
+        useContentSize: true,
+        frame: false, // 无边框
+        transparent: true, // 透明
+        // fullscreen: true, // 全屏,
+        resizable: false,
+        maximizable: false,
+        minimizable: false
+    })
+
+    loginWindow.loadURL(loginURL)
+
+    // 为了防止闪烁，让画面准备好了再显示
+    // 对于一个复杂的应用，ready-to-show 可能发出的太晚，会让应用感觉缓慢。 在这种情况下，建议立刻显示窗口，并使用接近应用程序背景的 backgroundColor
+    // 请注意，即使是使用 ready-to-show 事件的应用程序，仍建议使用设置 backgroundColor 使应用程序感觉更原生。
+    loginWindow.once('ready-to-show', () => {
+        loginWindow.show()
+    })
+
+    loginWindow.on('closed', () => {
+        loginWindow = null
+    })
+
+    ipcMain.on('openMainWindow', () => {
+        if (!mainWindow) {
+            createMainWindow()
+        }
+
+        // loginWindow.hide()
+        loginWindow.destroy()
+        mainWindow.show()
+        mainWindow.focus()
+    })
+
+    ipcMain.on('openLoginWindow', () => {
+        if (!loginWindow) {
+            createLoginWindow()
+        }
+
+        // loginWindow.hide()
+        mainWindow.destroy()
+        loginWindow.show()
+        loginWindow.focus()
+    })
+}
+
+/**
+ * 创建主窗口
+ */
+function createMainWindow() {
+    if (mainWindow) {
+        return
+    }
+
     /**
      * Initial window options
      */
     mainWindow = new BrowserWindow({
+        show: false,
         height: 1000,
         width: 1600,
         minWidth: 900,
@@ -62,13 +136,6 @@ function createWindow() {
     })
 
     mainWindow.loadURL(winURL)
-
-    // 为了防止闪烁，让画面准备好了再显示
-    // 对于一个复杂的应用，ready-to-show 可能发出的太晚，会让应用感觉缓慢。 在这种情况下，建议立刻显示窗口，并使用接近应用程序背景的 backgroundColor
-    // 请注意，即使是使用 ready-to-show 事件的应用程序，仍建议使用设置 backgroundColor 使应用程序感觉更原生。
-    mainWindow.once('ready-to-show', () => {
-        mainWindow.show()
-    })
 
     /**
      * 监听
@@ -310,7 +377,7 @@ function crashReport() {
     })
 
     // 渲染进程崩溃事件
-    mainWindow.webContents.on('crashed', ()=>{
+    mainWindow.webContents.on('crashed', () => {
         const options = {
             type: 'error',
             title: '进程崩溃了',
@@ -360,15 +427,19 @@ if (!gotTheLock) {
 } else {
     app.on('second-instance', (event, commandLine, workingDirectory) => {
         // 当运行第二个实例时,将会聚焦到myWindow这个窗口
-        if (mainWindow) {
-            if (mainWindow.isMinimized()) mainWindow.restore()
-            mainWindow.focus()
+        // if (mainWindow) {
+        //     if (mainWindow.isMinimized()) mainWindow.restore()
+        //     mainWindow.focus()
+        // }
+        if (loginWindow) {
+            loginWindow.focus()
         }
     })
 
     // 创建 mainWindow, 加载应用的其余部分, etc...
     app.on('ready', () => {
-        createWindow()
+        createLoginWindow()
+        createMainWindow()
         createTray()
         ipcStartOnBoot()
         autoUpdate()
@@ -384,6 +455,10 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
     if (mainWindow === null) {
-        createWindow()
+        createMainWindow()
+    }
+
+    if (loginWindow === null) {
+        createLoginWindow()
     }
 })
