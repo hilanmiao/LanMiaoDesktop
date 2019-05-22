@@ -50,7 +50,7 @@
                                     :type="show1 ? 'text' : 'password'"
                                     name="input-10-1"
                                     label="Normal with hint text"
-                                    hint="At least 8 characters"
+                                    hint="At least 6 characters"
                                     counter
                                     @click:append="show1 = !show1"
                             ></v-text-field>
@@ -68,6 +68,13 @@
                         </v-form>
                     </v-card-text>
                 </v-card>
+
+                <v-snackbar
+                        v-model="ShowLoginErrMsg"
+                        color="error"
+                >
+                    {{ loginErrMsg }}
+                </v-snackbar>
             </v-container>
         </v-content>
     </v-app>
@@ -75,21 +82,24 @@
 
 <script>
     import {ipcRenderer} from 'electron'
+    import {login} from '~/api/user'
 
     export default {
         data: () => ({
             loadingSubmit: false,
             valid: true,
+            show1: false,
+            ShowLoginErrMsg: false,
+            loginErrMsg: '',
             name: 'admin',
-            password: 'Password',
+            password: '123456',
             nameRules: [
                 v => !!v || 'Name is required',
-                v => (v && v.length <= 10) || 'Name must be less than 10 characters'
+                v => (v && v.length <= 5) || 'Name must be less than 10 characters'
             ],
-            show1: false,
             rules: {
                 required: value => !!value || 'Required.',
-                min: v => v.length >= 8 || 'Min 8 characters',
+                min: v => v.length >= 6 || 'Min 6 characters',
                 emailMatch: () => ('The email and password you entered don\'t match')
             }
         }),
@@ -98,7 +108,18 @@
                 this.loadingSubmit = true
                 if (this.$refs.form.validate()) {
                     setTimeout(()=> {
-                        ipcRenderer.send('openMainWindow')
+                        login({name: this.name, password: this.password}).then(result =>{
+                            if(result) {
+                                ipcRenderer.send('openMainWindow')
+                            } else {
+                                this.loadingSubmit = false
+                                this.loginErrMsg = 'no user was found'
+                                this.ShowLoginErrMsg = true
+                            }
+                        }).catch(err => {
+                            this.loginErrMsg = err
+                            this.ShowLoginErrMsg = true
+                        })
                     }, 1000)
                 } else {
                     this.loadingSubmit = false
