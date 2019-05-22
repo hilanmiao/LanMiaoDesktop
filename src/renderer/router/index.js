@@ -21,6 +21,16 @@ export default new Router({
             }]
         },
         {
+            path: '/category',
+            name: 'category',
+            redirect: '/category/category',
+            component: require('@/components/Layout/Layout').default,
+            children: [{
+                path: 'category',
+                component: require('@/views/Category/Category').default
+            }]
+        },
+        {
             path: '/settings',
             name: 'settings',
             redirect: '/settings/settings',
