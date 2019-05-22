@@ -70,7 +70,9 @@
             ipcRenderer.removeAllListeners('getAutoStartValue')
         },
         mounted() {
-            this.getAutoStartValue()
+            if (process.env.NODE_ENV === 'production'){
+                this.getAutoStartValue()
+            }
         },
         methods: {
             changeAutoStart() {

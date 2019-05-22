@@ -46,7 +46,6 @@
     import Todo from './components/todo/todo'
     import History from './components/history/history'
     import StatsCurve from './components/statsCurve/statsCurve'
-    import db from '../../../datastore'
 
     export default {
         components: {
@@ -58,6 +57,9 @@
         data: () => ({
             dialogAdd: false
         }),
+        mounted() {
+
+        },
         methods:{
 
         }
