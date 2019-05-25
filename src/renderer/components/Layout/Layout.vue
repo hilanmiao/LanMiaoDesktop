@@ -182,7 +182,6 @@
                 {isSingle: true, icon: 'settings', text: 'Settings', to: '/settings'},
                 {isSingle: true, icon: 'lightbulb_outline', text: 'Notes', to: '/notes'},
                 {isSingle: true, icon: 'help', text: 'Help', to: '/help'},
-                {isSingle: true, icon: 'help', text: 'Login', to: '/login'},
                 {isSingle: true, icon: 'help', text: 'Lock', to: '/lock'}
             ],
             mini: false,
