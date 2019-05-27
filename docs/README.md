@@ -1,3 +1,4 @@
+# PocketBook
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/logo.png">
@@ -18,12 +19,16 @@
 
 ## 下载安装
 
+macOS用户请下载最新版本的`dmg`文件，windows用户请下载最新版本的`exe`文件，linux用户请下载`AppImage`文件。
 
+点击此处下载[应用](https://github.com/hilanmiao/LanMiaoDesktop/releases)。
 
 
 ## 应用截图
 
 ![首页](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/home.jpg)
+
+![登录](https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/login.png)
 
 ## 开发说明
 
@@ -55,7 +60,7 @@ npm run lint
 
 支付宝：
 
-<img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/alipay.png" width="200" hegiht="200"/> 
+<img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/alipay.png" width="200" hegiht="200"/>
 
 微信：
 
@@ -111,11 +116,7 @@ npm run lint
 
 - [Electron开发实战之记账软件16——使用Docsify生成文档网站](https://my.oschina.net/u/3667677/blog/3048374)
 
-Electron开发实战之记账软件1——使用sharedObject共享数据
-
-Electron开发实战之记账软件1——轻量级本地JSON数据库LowDB
-
-Electron开发实战之记账软件1——实现主要业务
+- [Electron开发实战之记账软件17——使用Lowdb存储数据](https://my.oschina.net/u/3667677/blog/3054535)
 
 Electron开发实战之记账软件1——迷你程序
 
