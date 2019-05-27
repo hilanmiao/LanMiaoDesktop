@@ -2,23 +2,37 @@
     <v-layout row>
         <v-flex xs12 d-flex>
             <v-card>
+                <!--<v-list three-line subheader>-->
+                    <!--<v-subheader>-->
+                        <!--User Controls-->
+                    <!--</v-subheader>-->
+                    <!--<v-list-tile>-->
+                        <!--<v-list-tile-content>-->
+                            <!--<v-list-tile-title>Content filtering</v-list-tile-title>-->
+                            <!--<v-list-tile-sub-title>-->
+                                <!--Set the content filtering level to restrict appts that can be download-->
+                            <!--</v-list-tile-sub-title>-->
+                        <!--</v-list-tile-content>-->
+                    <!--</v-list-tile>-->
+                    <!--<v-list-tile>-->
+                        <!--<v-list-tile-content>-->
+                            <!--<v-list-tile-title>Password</v-list-tile-title>-->
+                            <!--<v-list-tile-sub-title>-->
+                                <!--Require password for purchase or use password to restrict purchase-->
+                            <!--</v-list-tile-sub-title>-->
+                        <!--</v-list-tile-content>-->
+                    <!--</v-list-tile>-->
+                <!--</v-list>-->
+                <!--<v-divider></v-divider>-->
                 <v-list three-line subheader>
                     <v-subheader>
-                        User Controls
+                        UserData
                     </v-subheader>
                     <v-list-tile>
                         <v-list-tile-content>
-                            <v-list-tile-title>Content filtering</v-list-tile-title>
+                            <v-list-tile-title>Show User data path</v-list-tile-title>
                             <v-list-tile-sub-title>
-                                Set the content filtering level to restrict appts that can be download
-                            </v-list-tile-sub-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile>
-                        <v-list-tile-content>
-                            <v-list-tile-title>Password</v-list-tile-title>
-                            <v-list-tile-sub-title>
-                                Require password for purchase or use password to restrict purchase
+                                <a href="javascript:;" @click="openFile(userDataPath)">{{userDataPath}}</a>
                             </v-list-tile-sub-title>
                         </v-list-tile-content>
                     </v-list-tile>
@@ -57,24 +71,38 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {ipcRenderer} from 'electron'
+    import {ipcRenderer, app, remote, shell} from 'electron'
 
     export default {
         data: () => ({
             autoStart: false,
             notifications: true,
-            showErrorSetting: false
+            showErrorSetting: false,
+            userDataPath: ''
         }),
         destroyed() {
             // 移除事件监听
             ipcRenderer.removeAllListeners('getAutoStartValue')
         },
         mounted() {
-            if (process.env.NODE_ENV === 'production'){
+            this.getUserDataPath()
+            if (process.env.NODE_ENV === 'production') {
                 this.getAutoStartValue()
             }
         },
         methods: {
+            getUserDataPath() {
+                const APP = process.type === 'renderer' ? remote.app : app
+                this.userDataPath = APP.getPath('userData')
+            },
+            openFile(path) {
+                // 在文件管理器中显示给定的文件,如果可以,'选中'该文件
+                shell.showItemInFolder(path)
+                // 播放哔哔的声音
+                shell.beep()
+                // 以桌面的默认方式打开给定的文件
+                // shell.openItem(path)
+            },
             changeAutoStart() {
                 if (this.autoStart) {
                     this.enableAutoStart()
@@ -100,8 +128,9 @@
                 ipcRenderer.send('disableAutoStart')
             },
             logout() {
-                this.$store.dispatch('FedLogOut')
-                ipcRenderer.send('loggedOut')
+                // this.$store.dispatch('FedLogOut')
+                // ipcRenderer.send('loggedOut')
+                ipcRenderer.send('openLoginWindow')
             }
         }
     }

@@ -14,7 +14,8 @@ const APP = process.type === 'renderer' ? remote.app : app
 // 获取electron应用的用户目录
 const STORE_PATH = APP.getPath('userData')
 // console.log(STORE_PATH)
-// C:\Users\JD\AppData\Roaming\Electron
+// dev C:\Users\JD\AppData\Roaming\Electron
+// prod C:\Users\JD\AppData\Roaming\PocketBook
 
 if (process.type !== 'renderer') {
     // 如果不存在路径
