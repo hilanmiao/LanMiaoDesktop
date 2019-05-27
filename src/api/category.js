@@ -22,10 +22,10 @@ export function getCategoryWhere(attrs) {
     return new Promise((resolve, reject) => {
         try {
             const collection = db.get('category')
-            const category = collection.find(attrs).value()
+            const categoryList = collection.find(attrs).value()
             resolve({
                 code: 200,
-                data: category
+                data: categoryList
             })
         } catch (err) {
             return reject({
@@ -54,16 +54,19 @@ export function getCategoryAll() {
     })
 }
 
-export function getCategoryPagination(params) {
+export function getCategoryPagination(pagination, whereAttrs) {
     return new Promise((resolve, reject) => {
         try {
             const collection = db.get('category')
             const total = collection.size().value()
             const categoryList = collection
-                .filter(params.key)
-                .sortBy(params.sortBy, params.descending ? 'desc' : 'asc')
-                .chunk(params.rowsPerPage === -1 ? total : params.rowsPerPage)
-                .take(params.page)
+                .filter(o => {
+                    // 模糊查询
+                    return o.category.match(whereAttrs.category)
+                })
+                .sortBy(pagination.sortBy, pagination.descending ? 'desc' : 'asc')
+                .chunk(pagination.rowsPerPage === -1 ? total : pagination.rowsPerPage)
+                .take(pagination.page)
                 .last() // 因为上面用了chunk，是个二维数组，所以这里取最后一个
                 .value()
             resolve({
@@ -83,6 +86,13 @@ export function postCategory(document) {
     return new Promise((resolve, reject) => {
         try {
             const collection = db.get('category')
+            const category = collection.find({category: document.category}).value()
+            if(category) {
+                return reject({
+                    code: 400,
+                    message: 'This classification already exists'
+                })
+            }
             const newCategory = collection.insert(document).write()
             resolve({
                 code: 200,
@@ -101,6 +111,12 @@ export function postOrPutCategory(document) {
     return new Promise((resolve, reject) => {
         try {
             const collection = db.get('category')
+            if(collection.find({category: document.category}).value()) {
+                return reject({
+                    code: 400,
+                    message: 'This classification already exists'
+                })
+            }
             const newCategory = collection.upsert(document).write()
             resolve({
                 code: 200,
@@ -119,6 +135,12 @@ export function putCategoryById(id, attrs) {
     return new Promise((resolve, reject) => {
         try {
             const collection = db.get('category')
+            if(collection.find({category: attrs.category}).value()) {
+                return reject({
+                    code: 400,
+                    message: 'This classification already exists'
+                })
+            }
             const newCategory = collection.updateById(id, attrs).write()
             resolve({
                 code: 200,
@@ -137,6 +159,12 @@ export function putCategoryWhere(whereAttrs, attrs) {
     return new Promise((resolve, reject) => {
         try {
             const collection = db.get('category')
+            if(collection.find({category: attrs.category}).value()) {
+                return reject({
+                    code: 400,
+                    message: 'This classification already exists'
+                })
+            }
             const newCategory = collection.updateWhere(whereAttrs, attrs).write()
             resolve({
                 code: 200,
@@ -174,6 +202,25 @@ export function deleteCategoryById(id) {
         try {
             const collection = db.get('category')
             collection.removeById(id).write()
+            resolve({
+                code: 200
+            })
+        } catch (err) {
+            return reject({
+                code: 400,
+                message: err.message
+            })
+        }
+    })
+}
+
+export function deleteCategoryByIds(ids) {
+    return new Promise((resolve, reject) => {
+        try {
+            const collection = db.get('category')
+            ids.forEach(id => {
+                collection.removeById(id).write()
+            })
             resolve({
                 code: 200
             })

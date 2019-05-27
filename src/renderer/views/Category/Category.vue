@@ -12,29 +12,76 @@
                     <v-icon large>assignment</v-icon>
                 </v-sheet>
                 <v-card-title>
+                    <v-text-field
+                            v-model="search"
+                            append-icon="search"
+                            label="Search category"
+                            single-line
+                            hide-details
+                    ></v-text-field>
                     <v-spacer></v-spacer>
+                    <v-btn color="success" dark class="mb-2" @click="initialize">Search</v-btn>
                     <v-btn color="primary" dark class="mb-2" @click="dialogEdit = true">New Item</v-btn>
+                    <v-btn color="error" dark class="mb-2" @click="dialogDeleteBatch = true">Batch Delete</v-btn>
                 </v-card-title>
                 <v-card-text class="pt-0 title font-weight-bold">
                     <v-data-table
+                            v-model="selected"
                             :headers="headers"
                             :items="desserts"
-                            :pagination.sync="pagination"
                             :total-items="totalDesserts"
+                            :pagination.sync="pagination"
                             :loading="loading"
+                            select-all
+                            item-key="id"
                             class="elevation-1"
                     >
+                        <template v-slot:headers="props">
+                            <tr>
+                                <th>
+                                    <v-checkbox
+                                            :input-value="props.all"
+                                            :indeterminate="props.indeterminate"
+                                            primary
+                                            hide-details
+                                            @click.stop="toggleAll"
+                                    ></v-checkbox>
+                                </th>
+                                <th
+                                        v-for="(header, index) in props.headers"
+                                        :key="header.text"
+                                        :class="['column sortable',
+                                            pagination.descending ? 'desc' : 'asc',
+                                            header.value === pagination.sortBy ? 'active' : '',
+                                            index === props.headers.length -1 ? 'text-xs-right' : 'text-xs-left'
+                                            ]"
+                                        @click="changeSort(header.value)"
+                                >
+                                    <v-icon small>arrow_upward</v-icon>
+                                    {{ header.text }}
+                                </th>
+                            </tr>
+                        </template>
                         <template v-slot:items="props">
-                            <td>{{ props.item.category }}</td>
-                            <td>{{ props.item.type ==='i' ? '收入' : '支出' }}</td>
-                            <td class="text-xs-right">
-                                <v-btn fab small color="success" @click="editItem(props.item)">
-                                    <v-icon>edit</v-icon>
-                                </v-btn>
-                                <v-btn fab small color="error" @click="deleteItem(props.item)">
-                                    <v-icon>delete</v-icon>
-                                </v-btn>
-                            </td>
+                            <tr :active="props.selected" @click="props.selected = !props.selected">
+                                <td width="50">
+                                    <v-checkbox
+                                            :input-value="props.selected"
+                                            primary
+                                            hide-details
+                                    ></v-checkbox>
+                                </td>
+                                <td>{{ props.item.category }}</td>
+                                <td>{{ props.item.type ==='i' ? '收入' : '支出' }}</td>
+                                <td class="text-xs-right">
+                                    <v-btn fab small color="success" @click="editItem(props.item)">
+                                        <v-icon>edit</v-icon>
+                                    </v-btn>
+                                    <v-btn fab small color="error" @click="deleteItem(props.item)">
+                                        <v-icon>delete</v-icon>
+                                    </v-btn>
+                                </td>
+                            </tr>
                         </template>
                         <template v-slot:no-data>
                             <v-alert :value="showNoData" color="error" icon="warning">
@@ -98,13 +145,25 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="dialogDeleteBatch" max-width="290">
+            <v-card>
+                <v-card-title class="headline">batch delete immediately?</v-card-title>
+                <v-card-text>Are you sure you want to delete these items?
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click="closeDialogDeleteBatch">Disagree</v-btn>
+                    <v-btn color="blue darken-1" flat @click="saveDeleteBatch">Agree</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-snackbar
                 v-model="snackbar"
                 right
                 top
                 :color="submitResult ? 'success' : 'error'"
         >
-            {{ submitResult ? 'Operation succeeded': 'Operation succeeded' }}
+            {{ snackbarMsg}}
             <v-btn
                     flat
                     @click="snackbar = false"
@@ -116,7 +175,13 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {getCategoryPagination, postCategory, putCategoryById, deleteCategoryById} from '../../../api/category'
+    import {
+        getCategoryPagination,
+        postCategory,
+        putCategoryById,
+        deleteCategoryById,
+        deleteCategoryByIds
+    } from '../../../api/category'
 
     export default {
         data() {
@@ -126,18 +191,18 @@
                 showNoData: false,
                 totalDesserts: 0,
                 desserts: [],
-                pagination: {},
                 headers: [
-                    {
-                        text: 'Category',
-                        align: 'left',
-                        sortable: true,
-                        value: 'category'
-                    },
-                    {text: 'type', value: 'type', sortable: true},
-                    {text: 'Actions', align: 'right', value: 'id', sortable: false}
+                    {text: 'Category', value: 'category', align: 'left', sortable: true},
+                    {text: 'type', value: 'type', align: 'left', sortable: true},
+                    {text: 'Actions', value: 'id', align: 'right', sortable: false}
                 ],
                 noDataMessage: '',
+                search: '',
+                pagination: {
+                    sortBy: 'category'
+                },
+                selected: [],
+                dialogDeleteBatch: false,
                 // 表单相关
                 dialogDelete: false,
                 dialogEdit: false,
@@ -158,12 +223,13 @@
                 typeList: [{text: '收入', value: 'i'}, {text: '支出', value: 'e'}],
                 // 操作提示
                 snackbar: false,
+                snackbarMsg: ''
             }
         },
         computed: {
             formTitle() {
                 return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-            }
+            },
         },
         watch: {
             pagination: {
@@ -172,16 +238,46 @@
                 },
                 deep: true
             },
-            dialogEdit: {
+            // dialogEdit: {
+            //     handler(val) {
+            //         val || this.closeDialogEdit()
+            //     }
+            // },
+            submitResult: {
                 handler(val) {
-                    val || this.closeDialogEdit()
+                    if (val) {
+                        this.snackbarMsg = this.snackbarMsg ? this.snackbarMsg : 'Operation succeeded'
+                    } else {
+                        this.snackbarMsg = this.snackbarMsg ? this.snackbarMsg : 'Operation failed'
+                    }
                 }
             },
+            snackbar: {
+                handler(val) {
+                    if (!val) {
+                        // 重置结果显示相关
+                        this.submitResult = false
+                        this.snackbarMsg = ''
+                    }
+                }
+            }
         },
         mounted() {
             this.initialize()
         },
         methods: {
+            toggleAll() {
+                if (this.selected.length) this.selected = []
+                else this.selected = this.desserts.slice()
+            },
+            changeSort(column) {
+                if (this.pagination.sortBy === column) {
+                    this.pagination.descending = !this.pagination.descending
+                } else {
+                    this.pagination.sortBy = column
+                    this.pagination.descending = false
+                }
+            },
             initialize() {
                 this.showNoData = false
                 this.loading = true
@@ -189,18 +285,18 @@
                 // 排序是可以没有的，如果想强制至少一列总是被排序的，
                 // 而不是在升序（sorted ascending）/降序（sorted descending）/不排序（unsorted）的状态之间切换请添加 must-sort = true
                 const {sortBy, descending, page, rowsPerPage} = this.pagination
-                const params = this.pagination
+                let whereAttrs = {category: this.search}
 
-                getCategoryPagination(params).then(result => {
+                getCategoryPagination(this.pagination, whereAttrs).then(result => {
                     if (result.code === 200) {
                         const items = result.data.list
                         const total = result.data.total
 
-                        setTimeout(() => {
-                            this.loading = false
-                            this.desserts = items
-                            this.totalDesserts = total
-                        }, 1000)
+                        // setTimeout(() => {
+                        this.loading = false
+                        this.desserts = items
+                        this.totalDesserts = total
+                        // }, 1000)
                     } else {
                         this.loading = false
                         this.showNoData = true
@@ -241,6 +337,10 @@
                 }, 300)
             },
 
+            closeDialogDeleteBatch() {
+                this.dialogDeleteBatch = false
+            },
+
             saveDelete() {
                 deleteCategoryById(this.editedItem.id).then(result => {
                     if (result.code === 200) {
@@ -255,6 +355,29 @@
                     this.initialize()
                 }).catch(err => {
                     this.closeDialogDelete()
+                    this.submitResult = false
+                    // 显示结果
+                    this.snackbar = true
+                    // 每次操作成功后，重新获取数据
+                    this.initialize()
+                })
+            },
+
+            saveDeleteBatch() {
+                const ids = this.selected.map(item => item.id)
+                deleteCategoryByIds(ids).then(result => {
+                    if (result.code === 200) {
+                        this.submitResult = true
+                    } else {
+                        this.submitResult = false
+                    }
+                    this.closeDialogDeleteBatch()
+                    // 显示结果
+                    this.snackbar = true
+                    // 每次操作成功后，重新获取数据
+                    this.initialize()
+                }).catch(err => {
+                    this.closeDialogDeleteBatch()
                     this.submitResult = false
                     // 显示结果
                     this.snackbar = true
@@ -282,6 +405,7 @@
                             this.submitResult = false
                             // 显示结果
                             this.snackbar = true
+                            this.snackbarMsg = err.message
                             // 每次操作成功后，重新获取数据
                             this.initialize()
                         })
@@ -302,6 +426,7 @@
                             this.submitResult = false
                             // 显示结果
                             this.snackbar = true
+                            this.snackbarMsg = err.message
                             // 每次操作成功后，重新获取数据
                             this.initialize()
                         })
