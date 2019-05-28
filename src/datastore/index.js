@@ -35,15 +35,40 @@ db._.mixin(LodashId)
 
 // 初始化数据
 if(!db.has('user').value()) {
-    db.set('user',[{userId: 'admin', password: '123456'}]).write()
+    db.set('user',[]).write()
+    db.get('user').insert({userId: 'admin', password: '123456'}).write()
 }
 
 if(!db.has('category').value()) {
+    const tempData = [
+        {
+            "category": "breakfast",
+            "remark": "daily breakfast expenses",
+        },
+        {
+            "category": "dinner",
+            "remark": "daily dinner expenses",
+        },
+        {
+            "category": "lunch",
+            "remark": "Daily lunch expenses",
+        }
+    ]
     db.set('category', []).write()
+    tempData.forEach(item => {
+        db.get('category').insert(item).write()
+    })
 }
 
 if(!db.has('assets').value()) {
+    const tempData = [
+        {assetsName: 'me', assetsDetailed: 'My assets', assetsAmountOfMoney: 0},
+        {assetsName: 'wife', assetsDetailed: 'My wife\'s assets', assetsAmountOfMoney: 0}
+    ]
     db.set('assets', []).write()
+    tempData.forEach(item => {
+        db.get('assets').insert(item).write()
+    })
 }
 
 if(!db.has('incomeAndExpenditure').value()) {

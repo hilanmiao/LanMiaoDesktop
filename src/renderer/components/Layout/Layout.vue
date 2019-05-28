@@ -176,7 +176,9 @@
                         {icon: '', text: 'File Manager'}
                     ]
                 },
+                {isSingle: true, icon: 'book', text: 'IncomeAndExpenditure', to: '/incomeAndExpenditure'},
                 {isSingle: true, icon: 'book', text: 'Category', to: '/category'},
+                {isSingle: true, icon: 'book', text: 'Assets', to: '/assets'},
                 {divider: true},
                 {heading: 'System'},
                 {isSingle: true, icon: 'settings', text: 'Settings', to: '/settings'},

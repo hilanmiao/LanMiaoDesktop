@@ -22,7 +22,7 @@ export function getCategoryWhere(attrs) {
     return new Promise((resolve, reject) => {
         try {
             const collection = db.get('category')
-            const categoryList = collection.find(attrs).value()
+            const categoryList = collection.filter(attrs).value()
             resolve({
                 code: 200,
                 data: categoryList
@@ -64,7 +64,7 @@ export function getCategoryPagination(pagination, whereAttrs) {
                     // 模糊查询
                     return o.category.match(whereAttrs.category)
                 })
-                .sortBy(pagination.sortBy, pagination.descending ? 'desc' : 'asc')
+                .orderBy(pagination.sortBy, pagination.descending ? 'desc' : 'asc')
                 .chunk(pagination.rowsPerPage === -1 ? total : pagination.rowsPerPage)
                 .take(pagination.page)
                 .last() // 因为上面用了chunk，是个二维数组，所以这里取最后一个
@@ -135,7 +135,7 @@ export function putCategoryById(id, attrs) {
     return new Promise((resolve, reject) => {
         try {
             const collection = db.get('category')
-            if(collection.find({category: attrs.category}).value()) {
+            if(collection.find({category: attrs.category, remark: document.remark}).value()) {
                 return reject({
                     code: 400,
                     message: 'This classification already exists'

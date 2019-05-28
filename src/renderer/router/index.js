@@ -21,6 +21,16 @@ export default new Router({
             }]
         },
         {
+            path: '/incomeAndExpenditure',
+            name: 'incomeAndExpenditure',
+            redirect: '/incomeAndExpenditure/incomeAndExpenditure',
+            component: require('@/components/Layout/Layout').default,
+            children: [{
+                path: 'incomeAndExpenditure',
+                component: require('@/views/IncomeAndExpenditure/IncomeAndExpenditure').default
+            }]
+        },
+        {
             path: '/category',
             name: 'category',
             redirect: '/category/category',
@@ -28,6 +38,16 @@ export default new Router({
             children: [{
                 path: 'category',
                 component: require('@/views/Category/Category').default
+            }]
+        },
+        {
+            path: '/assets',
+            name: 'assets',
+            redirect: '/assets/assets',
+            component: require('@/components/Layout/Layout').default,
+            children: [{
+                path: 'assets',
+                component: require('@/views/Assets/Assets').default
             }]
         },
         {

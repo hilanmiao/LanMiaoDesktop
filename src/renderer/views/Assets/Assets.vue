@@ -15,7 +15,7 @@
                     <v-text-field
                             v-model="search"
                             append-icon="search"
-                            label="Search category"
+                            label="Search assets"
                             single-line
                             hide-details
                     ></v-text-field>
@@ -71,8 +71,9 @@
                                             hide-details
                                     ></v-checkbox>
                                 </td>
-                                <td>{{ props.item.category }}</td>
-                                <td>{{ props.item.remark}}</td>
+                                <td>{{ props.item.assetsName }}</td>
+                                <td>{{ props.item.assetsDetailed}}</td>
+                                <td>{{ props.item.assetsAmountOfMoney}}</td>
                                 <td class="text-xs-right">
                                     <v-btn fab small color="success" @click="editItem(props.item)">
                                         <v-icon>edit</v-icon>
@@ -107,13 +108,13 @@
                         <v-container grid-list-md>
                             <v-layout wrap>
                                 <v-flex xs12>
-                                    <v-text-field label="Category*"
+                                    <v-text-field label="AssetsName*"
                                                   :rules="[rules.required]"
-                                                  v-model="editedItem.category"></v-text-field>
+                                                  v-model="editedItem.assetsName"></v-text-field>
                                 </v-flex>
                                 <v-flex xs12>
-                                    <v-text-field label="Remark"
-                                                  v-model="editedItem.remark"></v-text-field>
+                                    <v-text-field label="assetsDetailed"
+                                                  v-model="editedItem.assetsDetailed"></v-text-field>
                                 </v-flex>
                             </v-layout>
                         </v-container>
@@ -170,12 +171,13 @@
 
 <script type="text/ecmascript-6">
     import {
-        getCategoryPagination,
-        postCategory,
-        putCategoryById,
-        deleteCategoryById,
-        deleteCategoryByIds
-    } from '../../../api/category'
+        getModelWhere,
+        getModelPagination,
+        postModel,
+        putModelById,
+        deleteModelById,
+        deleteModelByIds
+    } from '../../../api/assets'
 
     export default {
         data() {
@@ -186,14 +188,15 @@
                 totalDesserts: 0,
                 desserts: [],
                 headers: [
-                    {text: 'Category', value: 'category', align: 'left', sortable: true},
-                    {text: 'Remark', value: 'remark', align: 'left', sortable: true},
+                    {text: 'AssetsName', value: 'assetsName', align: 'left', sortable: true},
+                    {text: 'AssetsDetailed', value: 'assetsDetailed', align: 'left', sortable: true},
+                    {text: 'AssetsAmountOfMoney', value: 'assetsAmountOfMoney', align: 'left', sortable: true},
                     {text: 'Actions', value: 'id', align: 'right', sortable: false}
                 ],
                 noDataMessage: '',
                 search: '',
                 pagination: {
-                    sortBy: 'category'
+                    sortBy: 'assetsName'
                 },
                 selected: [],
                 dialogDeleteBatch: false,
@@ -204,12 +207,12 @@
                 submitResult: false,
                 editedIndex: -1,
                 editedItem: {
-                    category: '',
-                    remark: ''
+                    assetsName: '',
+                    assetsDetailed: ''
                 },
                 defaultItem: {
-                    category: '',
-                    remark: ''
+                    assetsName: '',
+                    assetsDetailed: ''
                 },
                 rules: {
                     required: value => !!value || 'Required.',
@@ -231,11 +234,6 @@
                 },
                 deep: true
             },
-            // dialogEdit: {
-            //     handler(val) {
-            //         val || this.closeDialogEdit()
-            //     }
-            // },
             submitResult: {
                 handler(val) {
                     if (val) {
@@ -278,9 +276,13 @@
                 // 排序是可以没有的，如果想强制至少一列总是被排序的，
                 // 而不是在升序（sorted ascending）/降序（sorted descending）/不排序（unsorted）的状态之间切换请添加 must-sort = true
                 const {sortBy, descending, page, rowsPerPage} = this.pagination
-                let whereAttrs = {category: this.search}
+                let whereAttrs = {assetsName: this.search}
+                const filterFun =  (o => {
+                    // 模糊查询
+                    return o.assetsName.match(whereAttrs.assetsName)
+                })
 
-                getCategoryPagination(this.pagination, whereAttrs).then(result => {
+                getModelPagination(this.pagination, whereAttrs, filterFun).then(result => {
                     if (result.code === 200) {
                         const items = result.data.list
                         const total = result.data.total
@@ -335,7 +337,7 @@
             },
 
             saveDelete() {
-                deleteCategoryById(this.editedItem.id).then(result => {
+                deleteModelById(this.editedItem.id).then(result => {
                     if (result.code === 200) {
                         this.submitResult = true
                     } else {
@@ -358,7 +360,7 @@
 
             saveDeleteBatch() {
                 const ids = this.selected.map(item => item.id)
-                deleteCategoryByIds(ids).then(result => {
+                deleteModelByIds(ids).then(result => {
                     if (result.code === 200) {
                         this.submitResult = true
                     } else {
@@ -382,46 +384,72 @@
             saveEdit() {
                 if (this.$refs.form.validate()) {
                     if (this.editedIndex > -1) {
-                        putCategoryById(this.editedItem.id, this.editedItem).then(result => {
-                            if (result.code === 200) {
-                                this.submitResult = true
-                            } else {
+                        // 业务需求：判断是否已经存在一模一样的
+                        getModelWhere({assetsName: this.editedItem.assetsName, assetsDetailed: this.editedItem.assetsDetailed}).then(result => {
+                            if (result.code === 200 && result.data.length) {
                                 this.submitResult = false
+                                this.snackbar = true
+                                this.snackbarMsg = 'this model already exists'
+                            } else {
+                                putModelById(this.editedItem.id, this.editedItem).then(result => {
+                                    if (result.code === 200) {
+                                        this.submitResult = true
+                                    } else {
+                                        this.submitResult = false
+                                    }
+                                    this.closeDialogEdit()
+                                    // 显示结果
+                                    this.snackbar = true
+                                    // 每次操作成功后，重新获取数据
+                                    this.initialize()
+                                }).catch(err => {
+                                    this.closeDialogEdit()
+                                    this.submitResult = false
+                                    // 显示结果
+                                    this.snackbar = true
+                                    this.snackbarMsg = err.message
+                                    // 每次操作成功后，重新获取数据
+                                    this.initialize()
+                                })
                             }
-                            this.closeDialogEdit()
-                            // 显示结果
-                            this.snackbar = true
-                            // 每次操作成功后，重新获取数据
-                            this.initialize()
                         }).catch(err => {
-                            this.closeDialogEdit()
                             this.submitResult = false
-                            // 显示结果
                             this.snackbar = true
                             this.snackbarMsg = err.message
-                            // 每次操作成功后，重新获取数据
-                            this.initialize()
                         })
                     } else {
-                        postCategory(this.editedItem).then(result => {
-                            if (result.code === 200) {
-                                this.submitResult = true
-                            } else {
+                        // 业务需求：判断是否已经存在
+                        getModelWhere({assetsName: this.editedItem.assetsName}).then(result => {
+                            if (result.code === 200 && result.data.length) {
                                 this.submitResult = false
+                                this.snackbar = true
+                                this.snackbarMsg = 'this model already exists'
+                            } else {
+                                postModel(this.editedItem).then(result => {
+                                    if (result.code === 200) {
+                                        this.submitResult = true
+                                    } else {
+                                        this.submitResult = false
+                                    }
+                                    this.closeDialogEdit()
+                                    // 显示结果
+                                    this.snackbar = true
+                                    // 每次操作成功后，重新获取数据
+                                    this.initialize()
+                                }).catch(err => {
+                                    this.closeDialogEdit()
+                                    this.submitResult = false
+                                    // 显示结果
+                                    this.snackbar = true
+                                    this.snackbarMsg = err.message
+                                    // 每次操作成功后，重新获取数据
+                                    this.initialize()
+                                })
                             }
-                            this.closeDialogEdit()
-                            // 显示结果
-                            this.snackbar = true
-                            // 每次操作成功后，重新获取数据
-                            this.initialize()
                         }).catch(err => {
-                            this.closeDialogEdit()
                             this.submitResult = false
-                            // 显示结果
                             this.snackbar = true
                             this.snackbarMsg = err.message
-                            // 每次操作成功后，重新获取数据
-                            this.initialize()
                         })
                     }
                 }
