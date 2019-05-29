@@ -55,9 +55,9 @@
                                             header.value === pagination.sortBy ? 'active' : '',
                                             index === props.headers.length -1 ? 'text-xs-right' : 'text-xs-left'
                                             ]"
-                                        @click="changeSort(header.value)"
+                                        @click="header.sortable && changeSort(header.value)"
                                 >
-                                    <v-icon small>arrow_upward</v-icon>
+                                    <v-icon small v-if="header.sortable">arrow_upward</v-icon>
                                     {{ header.text }}
                                 </th>
                             </tr>
