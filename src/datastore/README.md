@@ -36,4 +36,4 @@
 |--------|--------|--------|--------|
 |  id  |   string     |   Y     |    id    |
 |  category  |   string     |   Y     |    类别名称    |
-|  type  |   string     |        |    收入i\支出e    |
+|  remark  |   string     |        |    备注    |

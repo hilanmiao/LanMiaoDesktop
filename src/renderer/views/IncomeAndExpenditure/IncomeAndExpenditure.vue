@@ -55,9 +55,9 @@
                                             header.value === pagination.sortBy ? 'active' : '',
                                             index === props.headers.length -1 ? 'text-xs-right' : 'text-xs-left'
                                             ]"
-                                        @click="changeSort(header.value)"
+                                        @click="header.sortable && changeSort(header.value)"
                                 >
-                                    <v-icon small>arrow_upward</v-icon>
+                                    <v-icon small v-if="header.sortable">arrow_upward</v-icon>
                                     {{ header.text }}
                                 </th>
                             </tr>
@@ -71,13 +71,13 @@
                                             hide-details
                                     ></v-checkbox>
                                 </td>
-                                <td>{{ props.item.categoryId }}</td>
+                                <td>{{ props.item.assetsName }}</td>
+                                <td>{{ props.item.categoryName }}</td>
                                 <td>{{ props.item.type ==='i' ? 'Income' : 'Expenditure' }}</td>
-                                <td>{{ props.item.assetsId }}</td>
                                 <td>{{ props.item.remark }}</td>
-                                <td>{{ props.item.createdAt }}</td>
-                                <td>{{ props.item.amountOfMoney }}</td>
-                                <td class="text-xs-right">
+                                <td width="130">{{ props.item.createdAt }}</td>
+                                <td>${{ props.item.amountOfMoney }}</td>
+                                <td class="text-xs-right" width="180">
                                     <v-btn fab small color="success" @click="editItem(props.item)">
                                         <v-icon>edit</v-icon>
                                     </v-btn>
@@ -112,6 +112,16 @@
                             <v-layout wrap>
                                 <v-flex xs12>
                                     <v-select
+                                            :items="assetsList"
+                                            item-text="text"
+                                            item-value="value"
+                                            label="Assets*"
+                                            :rules="[rules.required]"
+                                            v-model="editedItem.assetsId"
+                                    ></v-select>
+                                </v-flex>
+                                <v-flex xs12>
+                                    <v-select
                                             :items="typeList"
                                             item-text="text"
                                             item-value="value"
@@ -121,26 +131,49 @@
                                     ></v-select>
                                 </v-flex>
                                 <v-flex xs12>
-                                    <v-text-field label="Category*"
-                                                  :rules="[rules.required]"
-                                                  v-model="editedItem.categoryId"></v-text-field>
+                                    <v-autocomplete
+                                            v-model="editedItem.categoryId"
+                                            :items="categoryList"
+                                            label="Category*"
+                                            :rules="[rules.required]"
+                                            persistent-hint
+                                    >
+                                    </v-autocomplete>
                                 </v-flex>
                                 <v-flex xs12>
                                     <v-text-field label="AmountOfMoney*"
+                                                  prefix="$"
+                                                  type="number"
+                                                  min="0"
                                                   :rules="[rules.required]"
                                                   v-model="editedItem.amountOfMoney"></v-text-field>
                                 </v-flex>
                                 <v-flex xs12>
-                                    <v-text-field label="Time"
-                                                  v-model="editedItem.createdAt"></v-text-field>
+                                    <v-menu
+                                            v-model="menuTime"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            lazy
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                    >
+                                        <template v-slot:activator="{ on }">
+                                            <v-text-field
+                                                    v-model="editedItem.createdAt"
+                                                    label="Time*"
+                                                    :rules="[rules.required]"
+                                                    readonly
+                                                    v-on="on"
+                                            ></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="editedItem.createdAt" @input="menuTime = false"></v-date-picker>
+                                    </v-menu>
                                 </v-flex>
                                 <v-flex xs12>
                                     <v-text-field label="Remark"
                                                   v-model="editedItem.remark"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12>
-                                    <v-text-field label="AssetsId"
-                                                  v-model="editedItem.assetsId"></v-text-field>
                                 </v-flex>
                             </v-layout>
                         </v-container>
@@ -204,6 +237,9 @@
         deleteModelByIds
     } from '../../../api/incomeAndExpenditure'
 
+    import {getCategoryAll} from '../../../api/category'
+    import {getModelAll as getAssetsAll} from '../../../api/assets'
+
     export default {
         data() {
             return {
@@ -213,9 +249,9 @@
                 totalDesserts: 0,
                 desserts: [],
                 headers: [
+                    {text: 'Assets', value: 'assetsId', align: 'left', sortable: true},
                     {text: 'Category', value: 'categoryId', align: 'left', sortable: true},
-                    {text: 'type', value: 'type', align: 'left', sortable: true},
-                    {text: 'Assets', value: 'assetsId', align: 'left', sortable: false},
+                    {text: 'Type', value: 'type', align: 'left', sortable: true},
                     {text: 'Remark', value: 'remark', align: 'left', sortable: false},
                     {text: 'Time', value: 'createdAt', align: 'left', sortable: true},
                     {text: 'AmountOfMoney', value: 'amountOfMoney', align: 'left', sortable: true},
@@ -229,6 +265,7 @@
                 selected: [],
                 dialogDeleteBatch: false,
                 // 表单相关
+                menuTime: false,
                 dialogDelete: false,
                 dialogEdit: false,
                 valid: true,
@@ -253,6 +290,8 @@
                 rules: {
                     required: value => !!value || 'Required.',
                 },
+                assetsList: [],
+                categoryList: [],
                 typeList: [{text: 'Income', value: 'i'}, {text: 'Expenditure', value: 'e'}],
                 // 操作提示
                 snackbar: false,
@@ -296,6 +335,8 @@
             }
         },
         mounted() {
+            this._getCategoryAll()
+            this._getAssetsAll()
             this.initialize()
         },
         methods: {
@@ -303,6 +344,7 @@
                 if (this.selected.length) this.selected = []
                 else this.selected = this.desserts.slice()
             },
+
             changeSort(column) {
                 if (this.pagination.sortBy === column) {
                     this.pagination.descending = !this.pagination.descending
@@ -311,6 +353,7 @@
                     this.pagination.descending = false
                 }
             },
+
             initialize() {
                 this.showNoData = false
                 this.loading = true
@@ -326,8 +369,27 @@
 
                 getModelPagination(this.pagination, whereAttrs, filterFun).then(result => {
                     if (result.code === 200) {
-                        const items = result.data.list
+                        let items = result.data.list
                         const total = result.data.total
+
+                        // 表关联
+                        if(items) {
+                            items.forEach(item => {
+                                this.categoryList.some(itemCategory => {
+                                    if(item.categoryId === itemCategory.value) {
+                                        item.categoryName = itemCategory.text
+                                        return true
+                                    }
+                                })
+
+                                this.assetsList.some(itemAssets => {
+                                    if(item.assetsId === itemAssets.value) {
+                                        item.assetsName = itemAssets.text
+                                        return true
+                                    }
+                                })
+                            })
+                        }
 
                         // setTimeout(() => {
                         this.loading = false
@@ -351,6 +413,7 @@
                 this.editedItem = Object.assign({}, item)
                 this.dialogEdit = true
             },
+
             deleteItem(item) {
                 this.editedItem = Object.assign({}, item)
                 this.dialogDelete = true
@@ -471,6 +534,25 @@
                 }
             },
 
+            _getCategoryAll() {
+                getCategoryAll().then(result => {
+                    if(result.code === 200) {
+                        this.categoryList = result.data.map(item => {
+                            return {text: item.category, value: item.id}
+                        })
+                    }
+                })
+            },
+
+            _getAssetsAll() {
+                getAssetsAll().then(result => {
+                    if(result.code === 200) {
+                        this.assetsList = result.data.map(item => {
+                            return {text: item.assetsName, value: item.id}
+                        })
+                    }
+                })
+            }
         }
     }
 </script>
