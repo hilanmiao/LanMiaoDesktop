@@ -76,7 +76,7 @@
                                 <td>{{ props.item.type ==='i' ? 'Income' : 'Expenditure' }}</td>
                                 <td>{{ props.item.remark }}</td>
                                 <td width="130">{{ props.item.createdAt }}</td>
-                                <td>${{ props.item.amountOfMoney }}</td>
+                                <td>{{props.item.type === 'e' ? '-':''}} ${{ props.item.amountOfMoney }}</td>
                                 <td class="text-xs-right" width="180">
                                     <v-btn fab small color="success" @click="editItem(props.item)">
                                         <v-icon>edit</v-icon>
@@ -144,6 +144,7 @@
                                     <v-text-field label="AmountOfMoney*"
                                                   prefix="$"
                                                   type="number"
+                                                  step="0.1"
                                                   min="0"
                                                   :rules="[rules.required]"
                                                   v-model="editedItem.amountOfMoney"></v-text-field>
@@ -168,7 +169,8 @@
                                                     v-on="on"
                                             ></v-text-field>
                                         </template>
-                                        <v-date-picker v-model="editedItem.createdAt" @input="menuTime = false"></v-date-picker>
+                                        <v-date-picker v-model="editedItem.createdAt"
+                                                       @input="menuTime = false"></v-date-picker>
                                     </v-menu>
                                 </v-flex>
                                 <v-flex xs12>
@@ -238,7 +240,11 @@
     } from '../../../api/incomeAndExpenditure'
 
     import {getCategoryAll} from '../../../api/category'
-    import {getModelAll as getAssetsAll} from '../../../api/assets'
+    import {
+        getModelAll as getAssetsAll,
+        putModelById as putAssetsById,
+        getModelById as getAssetsById
+    } from '../../../api/assets'
 
     export default {
         data() {
@@ -362,7 +368,7 @@
                 // 而不是在升序（sorted ascending）/降序（sorted descending）/不排序（unsorted）的状态之间切换请添加 must-sort = true
                 const {sortBy, descending, page, rowsPerPage} = this.pagination
                 const whereAttrs = {remark: this.search}
-                const filterFun =  (o => {
+                const filterFun = (o => {
                     // 模糊查询
                     return o.remark.match(whereAttrs.remark)
                 })
@@ -373,17 +379,17 @@
                         const total = result.data.total
 
                         // 表关联
-                        if(items) {
+                        if (items) {
                             items.forEach(item => {
                                 this.categoryList.some(itemCategory => {
-                                    if(item.categoryId === itemCategory.value) {
+                                    if (item.categoryId === itemCategory.value) {
                                         item.categoryName = itemCategory.text
                                         return true
                                     }
                                 })
 
                                 this.assetsList.some(itemAssets => {
-                                    if(item.assetsId === itemAssets.value) {
+                                    if (item.assetsId === itemAssets.value) {
                                         item.assetsName = itemAssets.text
                                         return true
                                     }
@@ -488,6 +494,8 @@
 
             saveEdit() {
                 if (this.$refs.form.validate()) {
+                    // 格式化
+                    this.editedItem.amountOfMoney = parseFloat(this.editedItem.amountOfMoney)
                     if (this.editedIndex > -1) {
                         putModelById(this.editedItem.id, this.editedItem).then(result => {
                             if (result.code === 200) {
@@ -536,7 +544,7 @@
 
             _getCategoryAll() {
                 getCategoryAll().then(result => {
-                    if(result.code === 200) {
+                    if (result.code === 200) {
                         this.categoryList = result.data.map(item => {
                             return {text: item.category, value: item.id}
                         })
@@ -546,13 +554,13 @@
 
             _getAssetsAll() {
                 getAssetsAll().then(result => {
-                    if(result.code === 200) {
+                    if (result.code === 200) {
                         this.assetsList = result.data.map(item => {
                             return {text: item.assetsName, value: item.id}
                         })
                     }
                 })
-            }
+            },
         }
     }
 </script>

@@ -14,7 +14,7 @@
 |--------|--------|--------|--------|
 |  id  |   string     |   Y     |    id    |
 |  type  |   string     |        |    收入i\支出e    |
-|  amountOfMoney  |   string     |        |    金额    |
+|  amountOfMoney  |   int     |        |    金额    |
 |  remark  |   string     |        |    备注    |
 |  categoryId  |   string     |        |    类别id    |
 |  assetsId  |   string     |        |    资产id    |
@@ -28,7 +28,7 @@
 |  id  |   string     |   Y     |    id    |
 |  assetsName  |   string     |   Y     |    资产名    |
 |  assetsDetailed  |   string     |        |    资产详细    |
-|  assetsAmountOfMoney  |   string     |        |    金额    |
+|  assetsAmountOfMoney  |   int     |        |    金额   |
 
 ## Category(收入支出类别表)
 

@@ -1,11 +1,11 @@
 import db from '../datastore'
 
-const TableName = 'assets'
+const Table = 'assets'
 
 export function getModelById(id) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const model = collection.getById(id).value()
             resolve({
                 code: 200,
@@ -23,7 +23,7 @@ export function getModelById(id) {
 export function getModelWhere(attrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const list = collection.filter(attrs).value()
             resolve({
                 code: 200,
@@ -41,7 +41,7 @@ export function getModelWhere(attrs) {
 export function getModelAll() {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const list = collection.value()
             resolve({
                 code: 200,
@@ -59,7 +59,7 @@ export function getModelAll() {
 export function getModelPagination(pagination, whereAttrs, filterFun) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const total = collection.size().value()
             const list = collection
                 .filter(filterFun)
@@ -84,7 +84,7 @@ export function getModelPagination(pagination, whereAttrs, filterFun) {
 export function postModel(document) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const model = collection.insert(document).write()
             resolve({
                 code: 200,
@@ -102,7 +102,7 @@ export function postModel(document) {
 export function postOrPutModel(document) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const model = collection.upsert(document).write()
             resolve({
                 code: 200,
@@ -120,7 +120,7 @@ export function postOrPutModel(document) {
 export function putModelById(id, attrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const model = collection.updateById(id, attrs).write()
             resolve({
                 code: 200,
@@ -138,7 +138,7 @@ export function putModelById(id, attrs) {
 export function putModelWhere(whereAttrs, attrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const model = collection.updateWhere(whereAttrs, attrs).write()
             resolve({
                 code: 200,
@@ -156,7 +156,7 @@ export function putModelWhere(whereAttrs, attrs) {
 export function replaceModelById(id, attrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const model = collection.replaceById(id, attrs).write()
             resolve({
                 code: 200,
@@ -174,7 +174,7 @@ export function replaceModelById(id, attrs) {
 export function deleteModelById(id) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             collection.removeById(id).write()
             resolve({
                 code: 200
@@ -191,7 +191,7 @@ export function deleteModelById(id) {
 export function deleteModelByIds(ids) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             ids.forEach(id => {
                 collection.removeById(id).write()
             })
@@ -210,7 +210,7 @@ export function deleteModelByIds(ids) {
 export function deleteModelWhere(whereAttrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get(TableName)
+            const collection = db.get(Table)
             const list = collection.removeWhere(whereAttrs).write()
             resolve({
                 code: 200,
