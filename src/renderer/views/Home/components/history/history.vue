@@ -19,9 +19,10 @@
                             :items="desserts"
                     >
                         <template v-slot:items="props">
-                            <td>{{ props.item.date }}</td>
-                            <td>{{ props.item.category }}</td>
-                            <td>{{ props.item.money }}</td>
+                            <td>{{ props.item.createdAt }}</td>
+                            <td>{{ props.item.assetsName }}</td>
+                            <td>{{ props.item.categoryName }}</td>
+                            <td>{{props.item.type === 'e'? '-':''}} {{ props.item.amountOfMoney }}</td>
                         </template>
                     </v-data-table>
                     <v-btn
@@ -29,6 +30,8 @@
                             class="mt-3"
                             depressed
                             round
+                            @click="loadMore"
+                            :disabled="noMoreData"
                     >
                         load more
                     </v-btn>
@@ -39,73 +42,109 @@
 </template>
 
 <script>
+    import {getModelPagination} from '../../../../../api/incomeAndExpenditure'
+    import {getCategoryAll} from '../../../../../api/category'
+    import {getModelAll as getAssetsAll} from '../../../../../api/assets'
+
     export default {
         name: "list",
-        data () {
+        data() {
             return {
                 headers: [
                     {
-                        text: 'Date',
-                        align: 'left',
-                        sortable: false,
-                        value: 'date'
+                        text: 'Time', align: 'left', sortable: false, value: 'createdAt'
                     },
-                    { text: 'Category',sortable: false, value: 'category' },
-                    { text: 'Money', sortable: false,value: 'money' },
+                    {text: 'Assets', sortable: false, value: 'assetsName'},
+                    {text: 'Category', sortable: false, value: 'categoryName'},
+                    {text: 'Money', sortable: false, value: 'amountOfMoney'},
                 ],
-                desserts: [
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    },
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    },
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    },
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    },
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    },
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    },
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    },
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    },
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    },
-                    {
-                        date: '2019-04-20 12:59:59',
-                        category: 'lunch',
-                        money: 11.5,
-                    }
-                ]
+                pagination: {
+                    sortBy: 'createdAt',
+                    descending: true,
+                    page: 1,
+                    rowsPerPage: 10
+                },
+                desserts: [],
+                assetsList: [],
+                categoryList: [],
+                totalDesserts: 0,
+                noMoreData: false
             }
+        },
+        mounted() {
+            Promise.all([this._getCategoryAll(), this._getAssetsAll()]).then(result => {
+                this.initialize()
+            })
+        },
+        methods: {
+            initialize() {
+                const whereAttrs = {remark: this.search}
+                const filterFun = (o => {
+                    return true
+                })
+
+                getModelPagination(this.pagination, whereAttrs, filterFun).then(result => {
+                    if (result.code === 200) {
+                        let items = result.data.list
+                        const total = result.data.total
+
+                        // 表关联
+                        if (items) {
+                            items.forEach(item => {
+                                this.categoryList.some(itemCategory => {
+                                    if (item.categoryId === itemCategory.value) {
+                                        item.categoryName = itemCategory.text
+                                        return true
+                                    }
+                                })
+
+                                this.assetsList.some(itemAssets => {
+                                    if (item.assetsId === itemAssets.value) {
+                                        item.assetsName = itemAssets.text
+                                        return true
+                                    }
+                                })
+                            })
+                        }
+
+                        this.totalDesserts = total
+                        if(this.pagination.page  > Math.ceil(this.totalDesserts / this.pagination.rowsPerPage)) {
+                            this.noMoreData = true
+                        } else {
+                            if(this.pagination.page > 1) {
+                                this.desserts = this.desserts.concat(items)
+                            } else {
+                                this.desserts = items
+                            }
+                        }
+                    }
+                })
+            },
+
+            loadMore() {
+                this.pagination.page += 1
+                this.initialize()
+            },
+
+            _getCategoryAll() {
+                getCategoryAll().then(result => {
+                    if (result.code === 200) {
+                        this.categoryList = result.data.map(item => {
+                            return {text: item.category, value: item.id}
+                        })
+                    }
+                })
+            },
+
+            _getAssetsAll() {
+                getAssetsAll().then(result => {
+                    if (result.code === 200) {
+                        this.assetsList = result.data.map(item => {
+                            return {text: item.assetsName, value: item.id}
+                        })
+                    }
+                })
+            },
         }
     }
 </script>

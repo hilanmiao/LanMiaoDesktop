@@ -341,9 +341,9 @@
             }
         },
         mounted() {
-            this._getCategoryAll()
-            this._getAssetsAll()
-            this.initialize()
+            Promise.all([this._getCategoryAll(), this._getAssetsAll()]).then(result => {
+                this.initialize()
+            })
         },
         methods: {
             toggleAll() {

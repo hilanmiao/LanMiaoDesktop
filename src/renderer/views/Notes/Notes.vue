@@ -10,7 +10,8 @@
                     </v-btn>
                 </v-flex>
                 <v-flex class="title" v-show="noNewVersion">
-                    <v-icon>thumb_up</v-icon> Already the latest version
+                    <v-icon>thumb_up</v-icon>
+                    Already the latest version
                 </v-flex>
                 <v-flex v-show="hasNewVersion">
                     <v-btn color="info"
@@ -106,7 +107,9 @@
         },
         mounted() {
             this.versionInfoList = this.getVersionInfoList()
-            this.checkForUpdate()
+            if (process.env.NODE_ENV === 'production') {
+                this.checkForUpdate()
+            }
         },
         methods: {
             getVersionInfoList() {
@@ -135,7 +138,7 @@
                     // console.log(progressObj)
                     this.downloadPercent = progressObj.percent.toFixed(0) || 0
                     // if(this.downloadPercent === 100) { // 这样写为啥不好使呢？
-                    if(progressObj.percent === 100) {
+                    if (progressObj.percent === 100) {
                         this.downloading = false
                         // 询问是否立即更新
                         this.dialogUpdateNow = true
@@ -144,7 +147,7 @@
             },
             updateNow() {
                 // 立刻退出并更新
-               ipcRenderer.send('isUpdateNow')
+                ipcRenderer.send('isUpdateNow')
             },
             checkForUpdate() {
                 // 开始检查
@@ -158,7 +161,7 @@
                     } else if (obj.action === 'error') {
                         this.showError = true
                         this.errorInfo = obj.errorInfo
-                    } else if(obj.action ==='updateNotAva') {
+                    } else if (obj.action === 'updateNotAva') {
                         this.noNewVersion = true
                     } else {
                         // console.log(text)

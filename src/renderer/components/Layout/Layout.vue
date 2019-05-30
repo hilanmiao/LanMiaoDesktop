@@ -153,7 +153,6 @@
     import {ipcRenderer} from 'electron'
     import Add from '../add/add'
 
-
     export default {
         components: {
             Add
@@ -163,28 +162,27 @@
             drawer: null,
             items: [
                 {heading: 'Home'},
-                {isSingle: true, icon: 'list', text: 'Dashboard', to: '/home'},
+                {isSingle: true, icon: 'home', text: 'Dashboard', to: '/home'},
                 {heading: 'Manager'},
-                {
-                    isGroup: true,
-                    icon: 'list',
-                    text: 'Task Manager',
-                    items: [
-                        {icon: '', text: 'Week Statistics'},
-                        {icon: '', text: 'Month Statistics'},
-                        {icon: '', text: 'Year Statistics'},
-                        {icon: '', text: 'File Manager'}
-                    ]
-                },
-                {isSingle: true, icon: 'book', text: 'IncomeAndExpenditure', to: '/incomeAndExpenditure'},
-                {isSingle: true, icon: 'book', text: 'Category', to: '/category'},
-                {isSingle: true, icon: 'book', text: 'Assets', to: '/assets'},
+                // {
+                //     isGroup: true,
+                //     icon: 'list',
+                //     text: 'Task Manager',
+                //     items: [
+                //         {icon: '', text: 'Week Statistics'},
+                //         {icon: '', text: 'Month Statistics'},
+                //         {icon: '', text: 'Year Statistics'},
+                //         {icon: '', text: 'File Manager'}
+                //     ]
+                // },
+                {isSingle: true, icon: 'import_export', text: 'IncomeAndExpenditure', to: '/incomeAndExpenditure'},
+                {isSingle: true, icon: 'category', text: 'Category', to: '/category'},
+                {isSingle: true, icon: 'account_balance_wallet', text: 'Assets', to: '/assets'},
                 {divider: true},
                 {heading: 'System'},
                 {isSingle: true, icon: 'settings', text: 'Settings', to: '/settings'},
                 {isSingle: true, icon: 'lightbulb_outline', text: 'Notes', to: '/notes'},
                 {isSingle: true, icon: 'help', text: 'Help', to: '/help'},
-                {isSingle: true, icon: 'help', text: 'Lock', to: '/lock'}
             ],
             mini: false,
             right: null,
