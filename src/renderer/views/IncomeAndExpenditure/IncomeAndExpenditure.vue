@@ -177,6 +177,21 @@
                                     <v-text-field label="Remark"
                                                   v-model="editedItem.remark"></v-text-field>
                                 </v-flex>
+                                <v-flex xs12>
+                                    <el-upload
+                                            class="upload-demo"
+                                            action="https://jsonplaceholder.typicode.com/posts/"
+                                            :on-preview="handlePreview"
+                                            :on-remove="handleRemove"
+                                            :before-remove="beforeRemove"
+                                            multiple
+                                            :on-exceed="handleExceed"
+                                            :file-list="fileList">
+                                        <!--<el-button size="small" type="primary">点击上传</el-button>-->
+                                        <v-btn color="blue darken-1">Upload</v-btn>
+                                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                    </el-upload>
+                                </v-flex>
                             </v-layout>
                         </v-container>
                         <small>*indicates required field</small>
@@ -249,6 +264,13 @@
     export default {
         data() {
             return {
+                fileList: [{
+                    name: 'food.jpeg',
+                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+                }, {
+                    name: 'food2.jpeg',
+                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+                }],
                 // 表格相关
                 loading: true,
                 showNoData: false,
@@ -346,6 +368,20 @@
             })
         },
         methods: {
+
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
+            handleExceed(files, fileList) {
+
+            },
+            beforeRemove(file, fileList) {
+
+            },
+
             toggleAll() {
                 if (this.selected.length) this.selected = []
                 else this.selected = this.desserts.slice()
