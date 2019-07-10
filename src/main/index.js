@@ -73,7 +73,10 @@ function createLoginWindow() {
         // fullscreen: true, // 全屏,
         resizable: false,
         maximizable: false,
-        minimizable: false
+        minimizable: false,
+        webPreferences: {
+            nodeIntegration: true
+        },
     })
 
     loginWindow.loadURL(loginURL)
@@ -133,6 +136,9 @@ function createMainWindow() {
         frame: false, // 无边框
         transparent: true, // 透明
         // fullscreen: true, // 全屏
+        webPreferences: {
+            nodeIntegration: true
+        },
     })
 
     mainWindow.loadURL(winURL)
@@ -164,6 +170,21 @@ function createMainWindow() {
 function createTray() {
     // 是否可以退出
     trayClose = false
+
+    // 系统托盘图标
+    iconPath = `${__static}/logoNotWin.png`
+    let iconMessagePath = `${__static}/iconMessageNotWin.png`
+    let iconTransparentPath = `${__static}/iconTransparentNotWin.png`
+    // 通知图标
+    const iconNoticePath = `${__static}/logo.png`
+
+    if(process.platform === 'win32') {
+        iconPath = `${__static}/logo.ico`
+        iconMessagePath = `${__static}/iconMessage.ico`
+        iconTransparentPath = `${__static}/iconTransparent.ico`
+    }
+
+
     // 系统托盘右键菜单
     trayMenuTemplate = [
         {
@@ -195,14 +216,14 @@ function createTray() {
                 // }
 
                 //系统托盘图标闪烁
-                appTray.setImage(`${__static}/iconMessage.ico`)
+                appTray.setImage(iconMessagePath)
                 let count = 0;
                 flashTrayTimer = setInterval(function () {
                     count++;
                     if (count % 2 == 0) {
-                        appTray.setImage(`${__static}/iconTransparent.ico`)
+                        appTray.setImage(iconTransparentPath)
                     } else {
-                        appTray.setImage(`${__static}/iconMessage.ico`)
+                        appTray.setImage(iconMessagePath)
                     }
                 }, 600);
             }
@@ -214,7 +235,7 @@ function createTray() {
                 let notification = new Notification({
                     title: '通知的标题', // 通知的标题, 将在通知窗口的顶部显示
                     body: '通知的正文文本', // 通知的正文文本, 将显示在标题或副标题下面
-                    icon: iconPath, // 用于在该通知上显示的图标
+                    icon: iconNoticePath, // 用于在该通知上显示的图标
                     silent: true, // 在显示通知时是否发出系统提示音
                 })
 
@@ -241,8 +262,7 @@ function createTray() {
             }
         }
     ]
-    // 系统托盘图标
-    iconPath = `${__static}/icon.ico`
+
     appTray = new Tray(iconPath)
     // 图标的上上下文
     contextMenu = Menu.buildFromTemplate(trayMenuTemplate)
@@ -256,7 +276,7 @@ function createTray() {
         clearInterval(flashTrayTimer)
         flashTrayTimer = null
         // 还原图标
-        appTray.setImage(`${__static}/icon.ico`)
+        appTray.setImage(iconPath)
         mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
     })
 }
