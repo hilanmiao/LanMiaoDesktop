@@ -69,6 +69,7 @@
     "axios": "^0.18.0",
     "electron-updater": "^4.0.6",
     "element-ui": "^2.9.1",
+    "exceljs": "^1.13.0",
     "fs-extra": "^8.0.1",
     "lodash-id": "^0.14.0",
     "lowdb": "^1.0.0",

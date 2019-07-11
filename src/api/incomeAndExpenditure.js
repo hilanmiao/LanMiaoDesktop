@@ -57,6 +57,24 @@ export function getModelAll() {
     })
 }
 
+export function getModelExport(filterFun) {
+    return new Promise((resolve, reject) => {
+        try {
+            const collection = db.get(Table)
+            const list = collection.filter(filterFun).value()
+            resolve({
+                code: 200,
+                data: list
+            })
+        } catch (err) {
+            return reject({
+                code: 400,
+                message: err.message
+            })
+        }
+    })
+}
+
 export function getModelPagination(pagination, whereAttrs, filterFun) {
     return new Promise((resolve, reject) => {
         try {

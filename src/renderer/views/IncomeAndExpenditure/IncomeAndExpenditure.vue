@@ -12,17 +12,67 @@
                     <v-icon large>assignment</v-icon>
                 </v-sheet>
                 <v-card-title>
-                    <v-text-field
-                            v-model="search"
-                            append-icon="search"
-                            label="Search remark"
+                    <v-menu
                             single-line
-                            hide-details
-                    ></v-text-field>
+                            v-model="menuTimeStart"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            lazy
+                            transition="scale-transition"
+                            offset-y
+                            full-width
+                            min-width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    style="width: 50px;margin-left: 15px;"
+                                    v-model="search.dateStart"
+                                    label="Date start"
+                                    single-line
+                                    hide-details
+                                    readonly
+                                    v-on="on"
+                                    clearable
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker
+                                v-model="search.dateStart"
+                                @input="menuTimeStart = false"></v-date-picker>
+                    </v-menu>
+                    <v-menu
+                            v-model="menuTimeEnd"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            lazy
+                            transition="scale-transition"
+                            offset-y
+                            full-width
+                            min-width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    style="width: 50px;margin-left: 15px;"
+                                    v-model="search.dateEnd"
+                                    label="Date End"
+                                    single-line
+                                    hide-details
+                                    readonly
+                                    v-on="on"
+                                    clearable
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker
+                                v-model="search.dateEnd"
+                                @input="menuTimeEnd = false"></v-date-picker>
+                    </v-menu>
                     <v-spacer></v-spacer>
                     <v-btn color="success" dark class="mb-2" @click="initialize">Search</v-btn>
                     <v-btn color="primary" dark class="mb-2" @click="dialogEdit = true">New Item</v-btn>
                     <v-btn color="error" dark class="mb-2" @click="dialogDeleteBatch = true">Batch Delete</v-btn>
+                    <v-btn :loading="exporting" :disabled="exporting" color="purple" @click="exportLocalFile">export
+                    </v-btn>
+                    <v-btn :loading="exporting" :disabled="exporting" color="error" @click="importLocalFile">import
+                    </v-btn>
                 </v-card-title>
                 <v-card-text class="pt-0 title font-weight-bold">
                     <v-data-table
@@ -248,6 +298,7 @@
 <script type="text/ecmascript-6">
     import {
         getModelPagination,
+        getModelExport,
         postModel,
         putModelById,
         deleteModelById,
@@ -256,6 +307,10 @@
 
     import {getModelAll as getCategoryAll} from '../../../api/category'
     import {getModelAll as getAssetsAll} from '../../../api/assets'
+    import Excel from 'exceljs'
+    import {app, remote, shell} from 'electron'
+    import moment from 'moment'
+    import fs from 'fs-extra'
 
     export default {
         data() {
@@ -282,12 +337,18 @@
                     {text: 'Actions', value: 'id', align: 'right', sortable: false}
                 ],
                 noDataMessage: '',
-                search: '',
+                search: {
+                    dateStart: '',
+                    dateEnd: ''
+                },
                 pagination: {
                     sortBy: 'createdAt'
                 },
                 selected: [],
                 dialogDeleteBatch: false,
+                exporting: false,
+                menuTimeStart: false,
+                menuTimeEnd: false,
                 // 表单相关
                 menuTime: false,
                 dialogDelete: false,
@@ -393,16 +454,47 @@
             },
 
             initialize() {
+                // 日期范围判断
+                if (this.search.dateStart && this.search.dateEnd) {
+                    if (moment(this.search.dateStart).isAfter(moment(this.search.dateEnd))) {
+                        this.snackbar = true
+                        this.snackbarMsg = 'Please select the correct date range'
+                        return
+                    }
+                }
+
                 this.showNoData = false
                 this.loading = true
 
                 // 排序是可以没有的，如果想强制至少一列总是被排序的，
                 // 而不是在升序（sorted ascending）/降序（sorted descending）/不排序（unsorted）的状态之间切换请添加 must-sort = true
                 const {sortBy, descending, page, rowsPerPage} = this.pagination
-                const whereAttrs = {remark: this.search}
+
+                let whereAttrs = {
+                    dateStart: this.search.dateStart,
+                    dateEnd: this.search.dateEnd
+                }
                 const filterFun = (o => {
+                    let check1, check2 = false
+
+                    if (whereAttrs.dateStart) {
+                        if (new Date(o.createdAt) >= new Date(whereAttrs.dateStart)) {
+                            check1 = true
+                        }
+                    } else {
+                        check1 = true
+                    }
+
+                    if (whereAttrs.dateEnd) {
+                        if (new Date(o.createdAt) <= new Date(whereAttrs.dateEnd)) {
+                            check2 = true
+                        }
+                    } else {
+                        check2 = true
+                    }
+
                     // 模糊查询
-                    return o.remark.match(whereAttrs.remark)
+                    return check1 && check2
                 })
 
                 getModelPagination(this.pagination, whereAttrs, filterFun).then(result => {
@@ -572,6 +664,200 @@
                         })
                     }
                 }
+            },
+
+            exportLocalFile() {
+                // 日期范围判断
+                if (this.search.dateStart && this.search.dateEnd) {
+                    if (moment(this.search.dateStart).isAfter(moment(this.search.dateEnd))) {
+                        this.snackbar = true
+                        this.snackbarMsg = 'Please select the correct date range'
+                        return
+                    }
+                }
+
+                this.exporting = true
+
+                // 创建一个文件
+                const workbook = new Excel.Workbook()
+                workbook.creator = 'test'
+                workbook.lastModifiedBy = 'test'
+                workbook.created = new Date()
+                workbook.modified = new Date()
+
+                // 创建一个工作组
+                let sheet = workbook.addWorksheet('test')
+
+                // 设置默认行高
+                sheet.properties.defaultRowHeight = 20;
+
+                // 创建列
+                sheet.getRow(1).values = ['Detail', , 'AssetsName', 'CategoryName', 'CreatedAt', 'Remark']
+                sheet.getRow(2).values = ['Type', 'AmountOfMoney', 'AssetsName', 'CategoryName', 'CreatedAt', 'Remark']
+
+                // 设置表头样式
+                const colorHeader = 'FFDB8B89'
+                const rowHeader1 = sheet.getRow(2)
+                rowHeader1.eachCell((cell, rowNumber) => {
+                    sheet.getColumn(rowNumber).alignment = {vertical: 'middle', horizontal: 'center'}
+                    sheet.getColumn(rowNumber).font = {size: 12, family: 2, bold: true}
+                    sheet.getColumn(rowNumber).fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: {argb: colorHeader}
+                    }
+                    sheet.getColumn(rowNumber).border = {
+                        top: {style: 'thin'},
+                        left: {style: 'thin'},
+                        bottom: {style: 'thin'},
+                        right: {style: 'thin'}
+                    }
+                })
+
+                // 冻结行
+                sheet.views = [{
+                    state: 'frozen', ySplit: 2, activeCell: 'A1'
+                }]
+
+                // 合并单元格
+                sheet.mergeCells('A1:B1')
+                sheet.mergeCells('C1:C2')
+                sheet.mergeCells('D1:D2')
+                sheet.mergeCells('E1:E2')
+                sheet.mergeCells('F1:F2')
+
+                // 添加数据项定义
+                sheet.columns = [
+                    {key: 'type', width: 30},
+                    {key: 'amountOfMoney', width: 30},
+                    {key: 'assetsName', width: 30},
+                    {key: 'categoryName', width: 30},
+                    {key: 'createdAt', width: 30},
+                    {key: 'remark', width: 60},
+                ]
+
+                // 获取数据
+                this._getModelExport().then(result => {
+                    console.log(result)
+                    // 创建行
+                    sheet.addRows(result.data)
+
+                    // 创建文件及文件夹
+                    const APP = process.type === 'renderer' ? remote.app : app
+                    // 获取electron应用的用户目录
+                    const STORE_PATH = APP.getPath('userData')
+
+                    const dir = STORE_PATH + '/export'
+                    const fileName = moment(new Date()).format('YYYYMMDDHHMMSS') + 'Export.xlsx'
+                    const fullPath = dir + '/' + fileName
+
+                    // 如果没有目录则创建
+                    fs.ensureDir(dir).then(() => {
+                        // 写文件
+                        workbook.xlsx.writeFile(fullPath).then(() => {
+                            this.exporting = false
+
+                            // 在文件管理器中显示给定的文件,如果可以,'选中'该文件
+                            shell.showItemInFolder(dir)
+                            // 播放哔哔的声音
+                            shell.beep()
+
+                            // 打开文件
+                            shell.openItem(fullPath)
+                        })
+                    }).catch(err => {
+                        this.snackbar = true
+                        this.snackbarMsg = 'Failed to create folder'
+                    })
+                }).catch(err => {
+                    this.snackbar = true
+                    this.snackbarMsg = err.message
+                })
+            },
+
+            importLocalFile() {
+
+            },
+
+            _getModelExport() {
+                return new Promise((resolve, reject) => {
+                    try {
+                        let whereAttrs = {
+                            dateStart: this.search.dateStart,
+                            dateEnd: this.search.dateEnd
+                        }
+                        const filterFun = (o => {
+                            let check1, check2 = false
+
+                            if (whereAttrs.dateStart) {
+                                if (new Date(o.createdAt) >= new Date(whereAttrs.dateStart)) {
+                                    check1 = true
+                                }
+                            } else {
+                                check1 = true
+                            }
+
+                            if (whereAttrs.dateEnd) {
+                                if (new Date(o.createdAt) <= new Date(whereAttrs.dateEnd)) {
+                                    check2 = true
+                                }
+                            } else {
+                                check2 = true
+                            }
+
+                            // 模糊查询
+                            return check1 && check2
+                        })
+
+                        getModelExport(filterFun).then(result => {
+                            // if (result.code === 200 && result.data.length) {
+                            // 可以导出空的
+                            if (result.code === 200) {
+                                let items = result.data
+
+                                // 表关联
+                                if (items) {
+                                    items.forEach(item => {
+                                        this.categoryList.some(itemCategory => {
+                                            if (item.categoryId === itemCategory.value) {
+                                                item.categoryName = itemCategory.text
+                                                return true
+                                            }
+                                        })
+
+                                        this.assetsList.some(itemAssets => {
+                                            if (item.assetsId === itemAssets.value) {
+                                                item.assetsName = itemAssets.text
+                                                return true
+                                            }
+                                        })
+
+                                        if (item.type === 'i') {
+                                            item.type = 'Income'
+                                        } else {
+                                            item.type = 'Expenditure'
+                                        }
+                                    })
+                                }
+
+                                resolve({
+                                    code: 200,
+                                    data: items
+                                })
+                            }
+                        }).catch(err => {
+                            return reject({
+                                code: 400,
+                                message: err.message
+                            })
+                        })
+                    } catch (err) {
+                        return reject({
+                            code: 400,
+                            message: err.message
+                        })
+                    }
+                })
             },
 
             _getCategoryAll() {
