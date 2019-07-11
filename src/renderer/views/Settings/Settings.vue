@@ -36,10 +36,38 @@
                             </v-list-tile-sub-title>
                         </v-list-tile-content>
                     </v-list-tile>
+                    <v-list-tile>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Show data backup path</v-list-tile-title>
+                            <v-list-tile-sub-title>
+                                <a href="javascript:;" @click="openFile(backupPath)">{{backupPath}}</a>
+                            </v-list-tile-sub-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Show export files path</v-list-tile-title>
+                            <v-list-tile-sub-title>
+                                <a href="javascript:;" @click="openFile(exportPath)">{{exportPath}}</a>
+                            </v-list-tile-sub-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
                 </v-list>
                 <v-divider></v-divider>
                 <v-list three-line subheader>
                     <v-subheader>General</v-subheader>
+                    <v-list-tile href="javascript:;">
+                        <v-list-tile-action>
+                            <v-btn fab dark small color="primary" :disabled="backuping" :loading="backuping"
+                                   @click="backup">
+                                <v-icon dark>cloud_download</v-icon>
+                            </v-btn>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Backup data</v-list-tile-title>
+                            <v-list-tile-sub-title>It is recommended to back up weekly</v-list-tile-sub-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
                     <v-list-tile href="javascript:;">
                         <v-list-tile-action>
                             <v-checkbox v-model="notifications" readonly></v-checkbox>
@@ -66,20 +94,57 @@
                     </v-list-tile>
                 </v-list>
             </v-card>
+
+            <v-snackbar
+                    v-model="snackbar"
+                    right
+                    top
+                    :color="submitResult ? 'success' : 'error'"
+            >
+                {{ snackbarMsg}}
+                <v-btn
+                        flat
+                        @click="snackbar = false"
+                >
+                    关闭
+                </v-btn>
+            </v-snackbar>
         </v-flex>
     </v-layout>
 </template>
 
 <script type="text/ecmascript-6">
     import {ipcRenderer, app, remote, shell} from 'electron'
+    import pkg from '../../../../package'
+    import moment from 'moment'
+    import fs from 'fs-extra'
 
     export default {
         data: () => ({
             autoStart: false,
             notifications: true,
             showErrorSetting: false,
-            userDataPath: ''
+            backuping: false,
+            userDataPath: '',
+            backupPath: '',
+            exportPath: '',
+            dbFileName: `/${pkg.name}_lowdb.json`,
+            // 操作提示
+            submitResult: false,
+            snackbar: false,
+            snackbarMsg: ''
         }),
+        watch: {
+            snackbar: {
+                handler(val) {
+                    if (!val) {
+                        // 重置结果显示相关
+                        this.submitResult = false
+                        this.snackbarMsg = ''
+                    }
+                }
+            }
+        },
         destroyed() {
             // 移除事件监听
             ipcRenderer.removeAllListeners('getAutoStartValue')
@@ -94,6 +159,8 @@
             getUserDataPath() {
                 const APP = process.type === 'renderer' ? remote.app : app
                 this.userDataPath = APP.getPath('userData')
+                this.backupPath = this.userDataPath + '/backup'
+                this.exportPath = this.userDataPath + '/export'
             },
             openFile(path) {
                 // 在文件管理器中显示给定的文件,如果可以,'选中'该文件
@@ -102,6 +169,33 @@
                 shell.beep()
                 // 以桌面的默认方式打开给定的文件
                 // shell.openItem(path)
+            },
+            backup() {
+                this.backuping = true
+                const backupFileName = moment(new Date()).format('YYYYMMDDHHMMSS') + 'Backup.json'
+
+                // 如果没有目录则创建
+                fs.ensureDir(this.backupPath).then(() => {
+                    // 复制文件
+                    fs.copy(this.userDataPath + '/' + this.dbFileName, this.backupPath + '/' + backupFileName)
+                        .then(() => {
+                            this.backuping = false
+                            this.snackbar = true
+                            this.submitResult = true
+                            this.snackbarMsg = 'Backup succeeded'
+                        })
+                        .catch(err => {
+                            this.backuping = false
+                            this.snackbar = true
+                            this.submitResult = false
+                            this.snackbarMsg = 'Backup failed'
+                        })
+                }).catch(err => {
+                    this.backuping = false
+                    this.snackbar = true
+                    this.submitResult = false
+                    this.snackbarMsg = 'Failed to create folder'
+                })
             },
             changeAutoStart() {
                 if (this.autoStart) {
