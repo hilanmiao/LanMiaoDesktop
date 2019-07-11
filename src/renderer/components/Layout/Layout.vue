@@ -181,6 +181,7 @@
                 {divider: true},
                 {heading: 'System'},
                 {isSingle: true, icon: 'settings', text: 'Settings', to: '/settings'},
+                {isSingle: true, icon: 'visibility_off', text: 'Password', to: '/password'},
                 {isSingle: true, icon: 'lightbulb_outline', text: 'Notes', to: '/notes'},
                 {isSingle: true, icon: 'help', text: 'Help', to: '/help'},
             ],

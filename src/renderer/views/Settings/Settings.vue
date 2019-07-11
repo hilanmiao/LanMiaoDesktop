@@ -106,7 +106,7 @@
                         flat
                         @click="snackbar = false"
                 >
-                    关闭
+                    Close
                 </v-btn>
             </v-snackbar>
         </v-flex>

@@ -81,6 +81,16 @@ export default new Router({
             }]
         },
         {
+            path: '/password',
+            name: 'password',
+            redirect: '/password/password',
+            component: require('@/components/Layout/Layout').default,
+            children: [{
+                path: 'password',
+                component: require('@/views/Password/Password').default
+            }]
+        },
+        {
             path: '/lock',
             name: 'lock',
             redirect: '/lock/lock',
