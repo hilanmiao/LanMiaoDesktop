@@ -43,7 +43,7 @@
 
 <script>
     import {getModelPagination} from '../../../../../api/incomeAndExpenditure'
-    import {getCategoryAll} from '../../../../../api/category'
+    import {getModelAll as getCategoryAll} from '../../../../../api/category'
     import {getModelAll as getAssetsAll} from '../../../../../api/assets'
 
     export default {

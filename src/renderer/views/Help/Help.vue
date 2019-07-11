@@ -2,10 +2,7 @@
     <div class="intro-wrapper">
         <canvas></canvas>
         <div class="info-wrapper">
-            <h1><a href="">lan miao</a></h1>
-                <h2>Laziness is an attitude</h2>
-            <p><a href="http://lanmiao.oschina.io/" target="_blank">Blog</a></p>
-            <p><a href="https://github.com/hilanmiao" target="_blank">Github</a></p>
+            <h1>https://github.com/hilanmiao/LanMiaoDesktop</h1>
         </div>
     </div>
 </template>
@@ -76,52 +73,25 @@
 
 <style scoped type="text/css" lang="scss">
     .intro-wrapper {
+        display: flex;
         font-family: 'Open Sans', 'Helvetica Neue', 'Hiragino Sans GB', 'LiHei Pro', Arial, sans-serif;
         color: #333;
         overflow: hidden;
         height: 100%;
         width: 100%;
         position: absolute;
+
         .info-wrapper {
             position: absolute;
-            width: 320px;
-            top: 50%;
-            left: 50%;
-            text-align: center;
-            margin-top: -160px;
-            margin-left: -160px
+            color: #fff;
+            /* margin-left: auto; */
+            /* margin-right: auto; */
+            left: 0;
+            right: 0;
+            margin-top: 150px;
+
             h1 {
-                font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
-                font-weight: 700;
-                font-size: 35px;
-                letter-spacing: 9px;
-                text-transform: uppercase;
-                margin: 12px 0;
-                left: 4px
-                a {
-                    color: #333;
-                    text-decoration: none
-                }
-            }
-            h2 {
-                color: #999;
-                /*font-weight: normal*/
-                font-size: 15px;
-                letter-spacing: .12em;
-                margin-bottom: 30px;
-                left: 3px;
-            }
-            p {
-                font-size: 14px;
-                line-height: 2em;
-                margin: 0;
-                letter-spacing: 2px;
-                font-weight: bold;
-                a {
-                    color: #999;
-                    text-decoration: none;
-                    transition: color .2s ease;
-                }
+                text-align: center;
             }
         }
     }

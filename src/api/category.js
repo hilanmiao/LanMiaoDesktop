@@ -1,13 +1,15 @@
 import db from '../datastore'
 
-export function getCategoryById(id) {
+const Table = 'category'
+
+export function getModelById(id) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
-            const category = collection.getById(id).value()
+            const collection = db.get(Table)
+            const model = collection.getById(id).value()
             resolve({
                 code: 200,
-                data: category
+                data: model
             })
         } catch (err) {
             return reject({
@@ -18,14 +20,14 @@ export function getCategoryById(id) {
     })
 }
 
-export function getCategoryWhere(attrs) {
+export function getModelWhere(attrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
-            const categoryList = collection.filter(attrs).value()
+            const collection = db.get(Table)
+            const list = collection.filter(attrs).value()
             resolve({
                 code: 200,
-                data: categoryList
+                data: list
             })
         } catch (err) {
             return reject({
@@ -36,14 +38,14 @@ export function getCategoryWhere(attrs) {
     })
 }
 
-export function getCategoryAll() {
+export function getModelAll() {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
-            const categoryAll = collection.value()
+            const collection = db.get(Table)
+            const list = collection.value()
             resolve({
                 code: 200,
-                data: categoryAll
+                data: list
             })
         } catch (err) {
             return reject({
@@ -54,16 +56,13 @@ export function getCategoryAll() {
     })
 }
 
-export function getCategoryPagination(pagination, whereAttrs) {
+export function getModelPagination(pagination, whereAttrs, filterFun) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
+            const collection = db.get(Table)
             const total = collection.size().value()
-            const categoryList = collection
-                .filter(o => {
-                    // 模糊查询
-                    return o.category.match(whereAttrs.category)
-                })
+            const list = collection
+                .filter(filterFun)
                 .orderBy(pagination.sortBy, pagination.descending ? 'desc' : 'asc')
                 .chunk(pagination.rowsPerPage === -1 ? total : pagination.rowsPerPage)
                 .take(pagination.page)
@@ -71,7 +70,7 @@ export function getCategoryPagination(pagination, whereAttrs) {
                 .value()
             resolve({
                 code: 200,
-                data: {total: total, list: categoryList}
+                data: {total: total, list: list}
             })
         } catch (err) {
             return reject({
@@ -82,21 +81,14 @@ export function getCategoryPagination(pagination, whereAttrs) {
     })
 }
 
-export function postCategory(document) {
+export function postModel(document) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
-            const category = collection.find({category: document.category}).value()
-            if(category) {
-                return reject({
-                    code: 400,
-                    message: 'This classification already exists'
-                })
-            }
-            const newCategory = collection.insert(document).write()
+            const collection = db.get(Table)
+            const model = collection.insert(document).write()
             resolve({
                 code: 200,
-                data: newCategory
+                data: model
             })
         } catch (err) {
             return reject({
@@ -107,20 +99,14 @@ export function postCategory(document) {
     })
 }
 
-export function postOrPutCategory(document) {
+export function postOrPutModel(document) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
-            if(collection.find({category: document.category}).value()) {
-                return reject({
-                    code: 400,
-                    message: 'This classification already exists'
-                })
-            }
-            const newCategory = collection.upsert(document).write()
+            const collection = db.get(Table)
+            const model = collection.upsert(document).write()
             resolve({
                 code: 200,
-                data: newCategory
+                data: model
             })
         } catch (err) {
             return reject({
@@ -131,20 +117,14 @@ export function postOrPutCategory(document) {
     })
 }
 
-export function putCategoryById(id, attrs) {
+export function putModelById(id, attrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
-            if(collection.find({category: attrs.category, remark: document.remark}).value()) {
-                return reject({
-                    code: 400,
-                    message: 'This classification already exists'
-                })
-            }
-            const newCategory = collection.updateById(id, attrs).write()
+            const collection = db.get(Table)
+            const model = collection.updateById(id, attrs).write()
             resolve({
                 code: 200,
-                data: newCategory
+                data: model
             })
         } catch (err) {
             return reject({
@@ -155,20 +135,14 @@ export function putCategoryById(id, attrs) {
     })
 }
 
-export function putCategoryWhere(whereAttrs, attrs) {
+export function putModelWhere(whereAttrs, attrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
-            if(collection.find({category: attrs.category}).value()) {
-                return reject({
-                    code: 400,
-                    message: 'This classification already exists'
-                })
-            }
-            const newCategory = collection.updateWhere(whereAttrs, attrs).write()
+            const collection = db.get(Table)
+            const model = collection.updateWhere(whereAttrs, attrs).write()
             resolve({
                 code: 200,
-                data: newCategory
+                data: model
             })
         } catch (err) {
             return reject({
@@ -179,14 +153,14 @@ export function putCategoryWhere(whereAttrs, attrs) {
     })
 }
 
-export function replaceCategoryById(id, attrs) {
+export function replaceModelById(id, attrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
-            const newCategory = collection.replaceById(id, attrs).write()
+            const collection = db.get(Table)
+            const model = collection.replaceById(id, attrs).write()
             resolve({
                 code: 200,
-                data: newCategory
+                data: model
             })
         } catch (err) {
             return reject({
@@ -197,10 +171,10 @@ export function replaceCategoryById(id, attrs) {
     })
 }
 
-export function deleteCategoryById(id) {
+export function deleteModelById(id) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
+            const collection = db.get(Table)
             collection.removeById(id).write()
             resolve({
                 code: 200
@@ -214,10 +188,10 @@ export function deleteCategoryById(id) {
     })
 }
 
-export function deleteCategoryByIds(ids) {
+export function deleteModelByIds(ids) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
+            const collection = db.get(Table)
             ids.forEach(id => {
                 collection.removeById(id).write()
             })
@@ -233,14 +207,14 @@ export function deleteCategoryByIds(ids) {
     })
 }
 
-export function deleteCategoryWhere(whereAttrs) {
+export function deleteModelWhere(whereAttrs) {
     return new Promise((resolve, reject) => {
         try {
-            const collection = db.get('category')
-            const categoryList = collection.removeWhere(whereAttrs).write()
+            const collection = db.get(Table)
+            const list = collection.removeWhere(whereAttrs).write()
             resolve({
                 code: 200,
-                data: categoryList
+                data: list
             })
         } catch (err) {
             return reject({

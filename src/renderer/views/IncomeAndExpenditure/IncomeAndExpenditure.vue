@@ -254,12 +254,8 @@
         deleteModelByIds
     } from '../../../api/incomeAndExpenditure'
 
-    import {getCategoryAll} from '../../../api/category'
-    import {
-        getModelAll as getAssetsAll,
-        putModelById as putAssetsById,
-        getModelById as getAssetsById
-    } from '../../../api/assets'
+    import {getModelAll as getCategoryAll} from '../../../api/category'
+    import {getModelAll as getAssetsAll} from '../../../api/assets'
 
     export default {
         data() {

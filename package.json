@@ -73,6 +73,7 @@
     "lodash-id": "^0.14.0",
     "lowdb": "^1.0.0",
     "material-design-icons-iconfont": "^4.0.5",
+    "moment": "^2.24.0",
     "vue": "^2.6.10",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.3",

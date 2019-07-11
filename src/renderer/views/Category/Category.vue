@@ -170,11 +170,12 @@
 
 <script type="text/ecmascript-6">
     import {
-        getCategoryPagination,
-        postCategory,
-        putCategoryById,
-        deleteCategoryById,
-        deleteCategoryByIds
+        getModelWhere,
+        getModelPagination,
+        postModel,
+        putModelById,
+        deleteModelById,
+        deleteModelByIds
     } from '../../../api/category'
 
     export default {
@@ -279,8 +280,12 @@
                 // 而不是在升序（sorted ascending）/降序（sorted descending）/不排序（unsorted）的状态之间切换请添加 must-sort = true
                 const {sortBy, descending, page, rowsPerPage} = this.pagination
                 let whereAttrs = {category: this.search}
+                const filterFun = (o => {
+                    // 模糊查询
+                    return o.category.match(whereAttrs.category)
+                })
 
-                getCategoryPagination(this.pagination, whereAttrs).then(result => {
+                getModelPagination(this.pagination, whereAttrs, filterFun).then(result => {
                     if (result.code === 200) {
                         const items = result.data.list
                         const total = result.data.total
@@ -335,7 +340,7 @@
             },
 
             saveDelete() {
-                deleteCategoryById(this.editedItem.id).then(result => {
+                deleteModelById(this.editedItem.id).then(result => {
                     if (result.code === 200) {
                         this.submitResult = true
                     } else {
@@ -358,7 +363,7 @@
 
             saveDeleteBatch() {
                 const ids = this.selected.map(item => item.id)
-                deleteCategoryByIds(ids).then(result => {
+                deleteModelByIds(ids).then(result => {
                     if (result.code === 200) {
                         this.submitResult = true
                     } else {
@@ -382,46 +387,72 @@
             saveEdit() {
                 if (this.$refs.form.validate()) {
                     if (this.editedIndex > -1) {
-                        putCategoryById(this.editedItem.id, this.editedItem).then(result => {
-                            if (result.code === 200) {
-                                this.submitResult = true
-                            } else {
+                        // 业务需求：判断是否已经存在一模一样的
+                        getModelWhere({category: this.editedItem.category, remark: this.editedItem.remark}).then(result => {
+                            if (result.code === 200 && result.data.length) {
                                 this.submitResult = false
+                                this.snackbar = true
+                                this.snackbarMsg = 'this category already exists'
+                            } else {
+                                putModelById(this.editedItem.id, this.editedItem).then(result => {
+                                    if (result.code === 200) {
+                                        this.submitResult = true
+                                    } else {
+                                        this.submitResult = false
+                                    }
+                                    this.closeDialogEdit()
+                                    // 显示结果
+                                    this.snackbar = true
+                                    // 每次操作成功后，重新获取数据
+                                    this.initialize()
+                                }).catch(err => {
+                                    this.closeDialogEdit()
+                                    this.submitResult = false
+                                    // 显示结果
+                                    this.snackbar = true
+                                    this.snackbarMsg = err.message
+                                    // 每次操作成功后，重新获取数据
+                                    this.initialize()
+                                })
                             }
-                            this.closeDialogEdit()
-                            // 显示结果
-                            this.snackbar = true
-                            // 每次操作成功后，重新获取数据
-                            this.initialize()
                         }).catch(err => {
-                            this.closeDialogEdit()
                             this.submitResult = false
-                            // 显示结果
                             this.snackbar = true
                             this.snackbarMsg = err.message
-                            // 每次操作成功后，重新获取数据
-                            this.initialize()
                         })
                     } else {
-                        postCategory(this.editedItem).then(result => {
-                            if (result.code === 200) {
-                                this.submitResult = true
-                            } else {
+                        // 业务需求：判断是否已经存在
+                        getModelWhere({category: this.editedItem.category}).then(result => {
+                            if (result.code === 200 && result.data.length) {
                                 this.submitResult = false
+                                this.snackbar = true
+                                this.snackbarMsg = 'this category already exists'
+                            } else {
+                                postModel(this.editedItem).then(result => {
+                                    if (result.code === 200) {
+                                        this.submitResult = true
+                                    } else {
+                                        this.submitResult = false
+                                    }
+                                    this.closeDialogEdit()
+                                    // 显示结果
+                                    this.snackbar = true
+                                    // 每次操作成功后，重新获取数据
+                                    this.initialize()
+                                }).catch(err => {
+                                    this.closeDialogEdit()
+                                    this.submitResult = false
+                                    // 显示结果
+                                    this.snackbar = true
+                                    this.snackbarMsg = err.message
+                                    // 每次操作成功后，重新获取数据
+                                    this.initialize()
+                                })
                             }
-                            this.closeDialogEdit()
-                            // 显示结果
-                            this.snackbar = true
-                            // 每次操作成功后，重新获取数据
-                            this.initialize()
                         }).catch(err => {
-                            this.closeDialogEdit()
                             this.submitResult = false
-                            // 显示结果
                             this.snackbar = true
                             this.snackbarMsg = err.message
-                            // 每次操作成功后，重新获取数据
-                            this.initialize()
                         })
                     }
                 }
