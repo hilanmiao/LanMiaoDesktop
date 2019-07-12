@@ -71,7 +71,7 @@
                     <v-btn color="error" dark class="mb-2" @click="dialogDeleteBatch = true">Batch Delete</v-btn>
                     <v-btn :loading="exporting" :disabled="exporting" color="purple" @click="exportLocalFile">export
                     </v-btn>
-                    <v-btn :loading="exporting" :disabled="exporting" color="error" @click="importLocalFile">import
+                    <v-btn :loading="importing" :disabled="importing" color="error" @click="importLocalFile">import
                     </v-btn>
                 </v-card-title>
                 <v-card-text class="pt-0 title font-weight-bold">
@@ -305,12 +305,17 @@
         deleteModelByIds
     } from '../../../api/incomeAndExpenditure'
 
-    import {getModelAll as getCategoryAll} from '../../../api/category'
+    import {
+        getModelAll as getCategoryAll,
+        getModelWhere as getCategoryWhere,
+        postModel as postCategory
+    } from '../../../api/category'
     import {getModelAll as getAssetsAll} from '../../../api/assets'
     import Excel from 'exceljs'
     import {app, remote, shell} from 'electron'
     import moment from 'moment'
     import fs from 'fs-extra'
+    import db from '../../../datastore'
 
     export default {
         data() {
@@ -347,6 +352,7 @@
                 selected: [],
                 dialogDeleteBatch: false,
                 exporting: false,
+                importing: false,
                 menuTimeStart: false,
                 menuTimeEnd: false,
                 // 表单相关
@@ -380,7 +386,10 @@
                 typeList: [{text: 'Income', value: 'i'}, {text: 'Expenditure', value: 'e'}],
                 // 操作提示
                 snackbar: false,
-                snackbarMsg: ''
+                snackbarMsg: '',
+                // 导出路径
+                userDataPath: '',
+                exportPath: '',
             }
         },
         computed: {
@@ -420,11 +429,17 @@
             }
         },
         mounted() {
+            this.getUserDataPath()
             Promise.all([this._getCategoryAll(), this._getAssetsAll()]).then(result => {
                 this.initialize()
             })
         },
         methods: {
+            getUserDataPath() {
+                const APP = process.type === 'renderer' ? remote.app : app
+                this.userDataPath = APP.getPath('userData')
+                this.exportPath = this.userDataPath + '/export'
+            },
 
             handleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -680,13 +695,13 @@
 
                 // 创建一个文件
                 const workbook = new Excel.Workbook()
-                workbook.creator = 'test'
-                workbook.lastModifiedBy = 'test'
+                workbook.creator = 'Me'
+                workbook.lastModifiedBy = 'Her'
                 workbook.created = new Date()
                 workbook.modified = new Date()
 
                 // 创建一个工作组
-                let sheet = workbook.addWorksheet('test')
+                let sheet = workbook.addWorksheet('Export Data Sheet')
 
                 // 设置默认行高
                 sheet.properties.defaultRowHeight = 20;
@@ -743,11 +758,7 @@
                     sheet.addRows(result.data)
 
                     // 创建文件及文件夹
-                    const APP = process.type === 'renderer' ? remote.app : app
-                    // 获取electron应用的用户目录
-                    const STORE_PATH = APP.getPath('userData')
-
-                    const dir = STORE_PATH + '/export'
+                    const dir = this.exportPath
                     const fileName = moment(new Date()).format('YYYYMMDDHHMMSS') + 'Export.xlsx'
                     const fullPath = dir + '/' + fileName
 
@@ -776,7 +787,129 @@
             },
 
             importLocalFile() {
+                this.importing = true
 
+                // 弹出文件选择框
+                remote.dialog.showOpenDialog({
+                    // title: '请选择需要导入的文件',
+                    defaultPath: this.exportPath,
+                    // buttonLabel: '确认',
+                    // 过滤
+                    filters: [
+                        {name: 'xlsx', extensions: ['xlsx']}
+                    ],
+                    // 包含功能
+                    properties: ['openFile']
+                }, (filepaths, bookmarks) => {
+
+                    if (filepaths) {
+                        // 读取文件
+                        const workbook = new Excel.Workbook()
+                        workbook.xlsx.readFile(filepaths[0]).then(() => {
+                            // 重新结构化数据
+                            let data = []
+
+                            // 获取工作表
+                            const worksheet = workbook.getWorksheet(1)
+                            // 迭代工作表中具有值的所有行
+                            worksheet.eachRow(function (row, rowNumber) {
+                                console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values))
+                                // 去掉两行表头
+                                if (rowNumber > 2) {
+                                    // 重新组织数据，excel无论单元格还是行都是从1开始的
+                                    const model = {
+                                        type: row.values[1] === 'Income' ? 'i' :'e',
+                                        amountOfMoney: row.values[2],
+                                        assetsName: row.values[3],
+                                        categoryName: row.values[4],
+                                        createdAt: moment(row.values[5]).format('YYYY-MM-DD'),
+                                        remark: row.values[6],
+                                    }
+
+                                    data.push(model)
+                                }
+                            })
+                            // 业务处理
+                            // console.log(data)
+                            this._importData(data).then(result => {
+                                if (result.code === 200) {
+                                    this.submitResult = true
+                                    this.importing = false
+                                    this.snackbar = true
+                                    this.snackbarMsg = 'Successfully imported'
+
+                                    // 刷新所有列表
+                                    Promise.all([this._getCategoryAll(), this._getAssetsAll()]).then(result => {
+                                        this.initialize()
+                                    })
+                                }
+                            }).catch(err => {
+                                this.submitResult = false
+                                this.importing = false
+                                this.snackbar = true
+                                this.snackbarMsg = err.message
+                            })
+                        })
+                    } else {
+                        this.importing = false
+                    }
+                })
+            },
+
+            _importData(data) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        // TODO:由于没有事物，这里写的乱七八糟，而且直接操作db会比使用自己封装的API方便很多，但不专业
+
+                        data.forEach(item => {
+                            const collectionCategory = db.get('category')
+                            const collectionAssets = db.get('assets')
+                            const collectionIncomeAndExpenditure = db.get('incomeAndExpenditure')
+                            const listCategory = collectionCategory.filter({category: item.categoryName}).value()
+                            const listAssets = collectionAssets.filter({assetsName: item.assetsName}).value()
+                            let categoryId,assetsId
+                            if(!listCategory.length) {
+                                // 如果没有分类则新建
+                                categoryId = collectionCategory.insert({category: item.categoryName, remark:''}).write().id
+                            } else  {
+                                categoryId = listCategory[0].id
+                            }
+                            if(!listAssets.length) {
+                                // 如果没有资产表则新建
+                                assetsId = collectionAssets.insert({assetsName: item.assetsName, assetsDetailed:'', assetsAmountOfMoney: 0}).write().id
+                            } else  {
+                                assetsId = listAssets[0].id
+                            }
+
+                            const model = {
+                                categoryId: categoryId,
+                                type: item.type,
+                                assetsId: assetsId,
+                                remark: item.remark,
+                                createdAt: item.createdAt,
+                                amountOfMoney: item.amountOfMoney,
+                            }
+                            // 插入主表
+                            collectionIncomeAndExpenditure.insert(model).write()
+
+                            // 更新资产表
+                            let assetsAmountOfMoney = 0
+                            collectionIncomeAndExpenditure.filter({assetsId: model.assetsId}).value().forEach(item => {
+                                assetsAmountOfMoney += item.type ==='e' ? -item.amountOfMoney : item.amountOfMoney
+                            })
+                            collectionAssets.updateById(model.assetsId, {assetsAmountOfMoney: assetsAmountOfMoney}).write()
+                        })
+
+                        resolve({
+                            code: 200
+                        })
+                    } catch (err) {
+                        return reject({
+                            code: 400,
+                            message: err.message
+                        })
+                    }
+                })
             },
 
             _getModelExport() {
