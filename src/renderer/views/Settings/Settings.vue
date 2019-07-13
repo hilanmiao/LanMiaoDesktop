@@ -3,25 +3,25 @@
         <v-flex xs12 d-flex>
             <v-card>
                 <!--<v-list three-line subheader>-->
-                    <!--<v-subheader>-->
-                        <!--User Controls-->
-                    <!--</v-subheader>-->
-                    <!--<v-list-tile>-->
-                        <!--<v-list-tile-content>-->
-                            <!--<v-list-tile-title>Content filtering</v-list-tile-title>-->
-                            <!--<v-list-tile-sub-title>-->
-                                <!--Set the content filtering level to restrict appts that can be download-->
-                            <!--</v-list-tile-sub-title>-->
-                        <!--</v-list-tile-content>-->
-                    <!--</v-list-tile>-->
-                    <!--<v-list-tile>-->
-                        <!--<v-list-tile-content>-->
-                            <!--<v-list-tile-title>Password</v-list-tile-title>-->
-                            <!--<v-list-tile-sub-title>-->
-                                <!--Require password for purchase or use password to restrict purchase-->
-                            <!--</v-list-tile-sub-title>-->
-                        <!--</v-list-tile-content>-->
-                    <!--</v-list-tile>-->
+                <!--<v-subheader>-->
+                <!--User Controls-->
+                <!--</v-subheader>-->
+                <!--<v-list-tile>-->
+                <!--<v-list-tile-content>-->
+                <!--<v-list-tile-title>Content filtering</v-list-tile-title>-->
+                <!--<v-list-tile-sub-title>-->
+                <!--Set the content filtering level to restrict appts that can be download-->
+                <!--</v-list-tile-sub-title>-->
+                <!--</v-list-tile-content>-->
+                <!--</v-list-tile>-->
+                <!--<v-list-tile>-->
+                <!--<v-list-tile-content>-->
+                <!--<v-list-tile-title>Password</v-list-tile-title>-->
+                <!--<v-list-tile-sub-title>-->
+                <!--Require password for purchase or use password to restrict purchase-->
+                <!--</v-list-tile-sub-title>-->
+                <!--</v-list-tile-content>-->
+                <!--</v-list-tile>-->
                 <!--</v-list>-->
                 <!--<v-divider></v-divider>-->
                 <v-list three-line subheader>
@@ -66,6 +66,18 @@
                         <v-list-tile-content>
                             <v-list-tile-title>Backup data</v-list-tile-title>
                             <v-list-tile-sub-title>It is recommended to back up weekly</v-list-tile-sub-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile href="javascript:;">
+                        <v-list-tile-action>
+                            <v-btn fab dark small color="primary" :disabled="recovering" :loading="recovering"
+                                   @click="recovery">
+                                <v-icon dark>history</v-icon>
+                            </v-btn>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Recovery data</v-list-tile-title>
+                            <v-list-tile-sub-title>It is recommended to back up data before recovery</v-list-tile-sub-title>
                         </v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile href="javascript:;">
@@ -125,6 +137,7 @@
             notifications: true,
             showErrorSetting: false,
             backuping: false,
+            recovering: false,
             userDataPath: '',
             backupPath: '',
             exportPath: '',
@@ -195,6 +208,54 @@
                     this.snackbar = true
                     this.submitResult = false
                     this.snackbarMsg = 'Failed to create folder'
+                })
+            },
+            recovery() {
+                this.recovering = true
+
+                // 弹出文件选择框
+                remote.dialog.showOpenDialog({
+                    // title: '请选择需要导入的文件',
+                    defaultPath: this.backupPath,
+                    // buttonLabel: '确认',
+                    // 过滤
+                    filters: [
+                        {name: 'json', extensions: ['json']}
+                    ],
+                    // 包含功能
+                    properties: ['openFile']
+                }, (filepaths, bookmarks) => {
+                    if (filepaths) {
+                        // 移除旧文件
+                        fs.remove(this.userDataPath + '/' + this.dbFileName).then(() => {
+                            // 复制文件
+                            fs.copy(filepaths[0], this.userDataPath + '/' + this.dbFileName)
+                                .then(() => {
+                                    this.recovering = false
+                                    this.snackbar = true
+                                    this.submitResult = true
+                                    this.snackbarMsg = 'Recovering succeeded'
+
+                                    // 重启应用
+                                    remote.app.relaunch()
+                                    // remote.app.quit()
+                                    remote.app.exit()
+                                })
+                                .catch(err => {
+                                    this.recovering = false
+                                    this.snackbar = true
+                                    this.submitResult = false
+                                    this.snackbarMsg = 'Recovering failed'
+                                })
+                        }).catch(err => {
+                            this.recovering = false
+                            this.snackbar = true
+                            this.submitResult = false
+                            this.snackbarMsg = 'Error deleting old files'
+                        })
+                    } else {
+                        this.recovering = false
+                    }
                 })
             },
             changeAutoStart() {
