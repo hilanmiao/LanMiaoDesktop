@@ -118,6 +118,9 @@ npm run lint
 
 - [Electron开发实战之记账软件17——使用Lowdb存储数据](https://my.oschina.net/u/3667677/blog/3054535)
 
+- [Electron开发实战之记账软件18——备份、恢复、导入、导出](https://my.oschina.net/u/3667677/blog/3073660)
+
+
 Electron开发实战之记账软件1——迷你程序
 
 Electron开发实战之记账软件99——完结

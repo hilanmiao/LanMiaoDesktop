@@ -60,7 +60,7 @@ npm run lint
 
 支付宝：
 
-<img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/alipay.png" width="200" hegiht="200"/>
+<img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/alipay.png" width="200" hegiht="200"/> 
 
 微信：
 
@@ -117,6 +117,9 @@ npm run lint
 - [Electron开发实战之记账软件16——使用Docsify生成文档网站](https://my.oschina.net/u/3667677/blog/3048374)
 
 - [Electron开发实战之记账软件17——使用Lowdb存储数据](https://my.oschina.net/u/3667677/blog/3054535)
+
+- [Electron开发实战之记账软件18——备份、恢复、导入、导出](https://my.oschina.net/u/3667677/blog/3073660)
+
 
 Electron开发实战之记账软件1——迷你程序
 

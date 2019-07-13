@@ -1,7 +1,7 @@
 ## 4.9.2(2019-04-21)
 
 
-### Bug Fixes
+### Bug Fixes（Just an example）
 
 * re-render gitalk when router changed ([11ea1f8](https://github.com/docsifyjs/docsify/commit/11ea1f8))
 
