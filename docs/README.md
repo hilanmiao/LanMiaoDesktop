@@ -23,6 +23,7 @@ macOS用户请下载最新版本的`dmg`文件，windows用户请下载最新版
 
 点击此处下载[应用](https://github.com/hilanmiao/LanMiaoDesktop/releases)。
 
+安装完毕，点击此处[尝试打开](PocketBook:?a=1&b=2)。
 
 ## 应用截图
 
