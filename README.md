@@ -23,7 +23,7 @@ macOS用户请下载最新版本的`dmg`文件，windows用户请下载最新版
 
 点击此处下载[应用](https://github.com/hilanmiao/LanMiaoDesktop/releases)。
 
-安装完毕，点击此处[尝试打开](PocketBook:?a=1&b=2)。
+安装完毕，点击此处<a href="PocketBook:?a=1&b=2">尝试打开</a>。
 
 ## 应用截图
 
@@ -121,6 +121,7 @@ npm run lint
 
 - [Electron开发实战之记账软件18——备份、恢复、导入、导出](https://my.oschina.net/u/3667677/blog/3073660)
 
+- [Electron开发实战之记账软件19——通过协议唤起Electron应用](https://my.oschina.net/u/3667677/blog/3074681)
 
 Electron开发实战之记账软件1——迷你程序
 
