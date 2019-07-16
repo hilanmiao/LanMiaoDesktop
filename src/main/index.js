@@ -88,6 +88,10 @@ function createLoginWindow() {
         loginWindow.show()
     })
 
+    loginWindow.on('close', (event) => {
+
+    })
+
     loginWindow.on('closed', () => {
         loginWindow = null
     })
@@ -148,10 +152,12 @@ function createMainWindow() {
      */
 
     mainWindow.on('close', (event) => {
-        if (!trayClose) {
-            // 最小化
-            mainWindow.hide()
-            event.preventDefault()
+        if(process.platform === 'win32') {
+            if (!trayClose) {
+                // 最小化
+                mainWindow.hide()
+                event.preventDefault()
+            }
         }
     })
 
