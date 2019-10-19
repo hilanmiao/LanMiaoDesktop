@@ -115,7 +115,9 @@ function startMain () {
 
 function startElectron () {
   var args = [
-    '--inspect=5858',
+    // '--inspect=5858',
+    // 为了方便调试chrome://inspect
+    '--inspect-brk=5858',
     path.join(__dirname, '../dist/electron/main.js')
   ]
 
@@ -127,7 +129,7 @@ function startElectron () {
   }
 
   electronProcess = spawn(electron, args)
-  
+
   electronProcess.stdout.on('data', data => {
     electronLog(data, 'blue')
   })

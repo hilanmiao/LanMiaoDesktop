@@ -15,6 +15,8 @@ let mainConfig = {
   externals: [
     ...Object.keys(dependencies || {})
   ],
+  // 为了方便调试chrome://inspect
+  devtool:`inline-source-map`,
   module: {
     rules: [
       {
