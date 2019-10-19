@@ -1,4 +1,5 @@
 import db from '../datastore'
+import _ from 'lodash'
 
 const Table = 'assets'
 
@@ -9,7 +10,7 @@ export function getModelById(id) {
             const model = collection.getById(id).value()
             resolve({
                 code: 200,
-                data: model
+                data: _.cloneDeep(model)
             })
         } catch (err) {
             return reject({
@@ -27,7 +28,7 @@ export function getModelWhere(attrs) {
             const list = collection.filter(attrs).value()
             resolve({
                 code: 200,
-                data: list
+                data: _.cloneDeep(list)
             })
         } catch (err) {
             return reject({
@@ -45,7 +46,7 @@ export function getModelAll() {
             const list = collection.value()
             resolve({
                 code: 200,
-                data: list
+                data: _.cloneDeep(list)
             })
         } catch (err) {
             return reject({
@@ -70,7 +71,7 @@ export function getModelPagination(pagination, whereAttrs, filterFun) {
                 .value()
             resolve({
                 code: 200,
-                data: {total: total, list: list}
+                data: _.cloneDeep({total: total, list: list})
             })
         } catch (err) {
             return reject({
@@ -88,7 +89,7 @@ export function postModel(document) {
             const model = collection.insert(document).write()
             resolve({
                 code: 200,
-                data: model
+                data: _.cloneDeep(model)
             })
         } catch (err) {
             return reject({
@@ -106,7 +107,7 @@ export function postOrPutModel(document) {
             const model = collection.upsert(document).write()
             resolve({
                 code: 200,
-                data: model
+                data: _.cloneDeep(model)
             })
         } catch (err) {
             return reject({
@@ -124,7 +125,7 @@ export function putModelById(id, attrs) {
             const model = collection.updateById(id, attrs).write()
             resolve({
                 code: 200,
-                data: model
+                data: _.cloneDeep(model)
             })
         } catch (err) {
             return reject({
@@ -142,7 +143,7 @@ export function putModelWhere(whereAttrs, attrs) {
             const model = collection.updateWhere(whereAttrs, attrs).write()
             resolve({
                 code: 200,
-                data: model
+                data: _.cloneDeep(model)
             })
         } catch (err) {
             return reject({
@@ -160,7 +161,7 @@ export function replaceModelById(id, attrs) {
             const model = collection.replaceById(id, attrs).write()
             resolve({
                 code: 200,
-                data: model
+                data: _.cloneDeep(model)
             })
         } catch (err) {
             return reject({
@@ -214,7 +215,7 @@ export function deleteModelWhere(whereAttrs) {
             const list = collection.removeWhere(whereAttrs).write()
             resolve({
                 code: 200,
-                data: list
+                data: _.cloneDeep(list)
             })
         } catch (err) {
             return reject({

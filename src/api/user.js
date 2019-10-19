@@ -1,4 +1,5 @@
 import db from '../datastore'
+import _ from 'lodash'
 
 const Table = 'user'
 
@@ -6,7 +7,7 @@ export function login(data) {
     return new Promise((resolve, reject) => {
         try {
             const user = db.read().get(Table).find({userId: data.name, password: data.password}).value()
-            resolve(user)
+            resolve(_.cloneDeep(user))
         } catch (err) {
             return reject(err)
         }
@@ -20,7 +21,7 @@ export function getModelWhere(attrs) {
             const list = collection.filter(attrs).value()
             resolve({
                 code: 200,
-                data: list
+                data: _.cloneDeep(list)
             })
         } catch (err) {
             return reject({
@@ -38,7 +39,7 @@ export function putModelById(id, attrs) {
             const model = collection.updateById(id, attrs).write()
             resolve({
                 code: 200,
-                data: model
+                data: _.cloneDeep(model)
             })
         } catch (err) {
             return reject({
