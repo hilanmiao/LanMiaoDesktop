@@ -403,29 +403,6 @@
                     this.initialize()
                 },
                 deep: true
-            },
-            // dialogEdit: {
-            //     handler(val) {
-            //         val || this.closeDialogEdit()
-            //     }
-            // },
-            submitResult: {
-                handler(val) {
-                    if (val) {
-                        this.snackbarMsg = this.snackbarMsg ? this.snackbarMsg : 'Operation succeeded'
-                    } else {
-                        this.snackbarMsg = this.snackbarMsg ? this.snackbarMsg : 'Operation failed'
-                    }
-                }
-            },
-            snackbar: {
-                handler(val) {
-                    if (!val) {
-                        // 重置结果显示相关
-                        this.submitResult = false
-                        this.snackbarMsg = ''
-                    }
-                }
             }
         },
         mounted() {
@@ -596,6 +573,7 @@
                     this.closeDialogDelete()
                     // 显示结果
                     this.snackbar = true
+                    this.snackbarMsg = 'Operation succeeded'
                     // 每次操作成功后，重新获取数据
                     this.initialize()
                 }).catch(err => {
@@ -603,6 +581,7 @@
                     this.submitResult = false
                     // 显示结果
                     this.snackbar = true
+                    this.snackbarMsg = err.message
                     // 每次操作成功后，重新获取数据
                     this.initialize()
                 })
@@ -619,6 +598,7 @@
                     this.closeDialogDeleteBatch()
                     // 显示结果
                     this.snackbar = true
+                    this.snackbarMsg = 'Operation succeeded'
                     // 每次操作成功后，重新获取数据
                     this.initialize()
                 }).catch(err => {
@@ -626,6 +606,7 @@
                     this.submitResult = false
                     // 显示结果
                     this.snackbar = true
+                    this.snackbarMsg = err.message
                     // 每次操作成功后，重新获取数据
                     this.initialize()
                 })
@@ -645,6 +626,7 @@
                             this.closeDialogEdit()
                             // 显示结果
                             this.snackbar = true
+                            this.snackbarMsg = 'Operation succeeded'
                             // 每次操作成功后，重新获取数据
                             this.initialize()
                         }).catch(err => {
@@ -666,6 +648,7 @@
                             this.closeDialogEdit()
                             // 显示结果
                             this.snackbar = true
+                            this.snackbarMsg = 'Operation succeeded'
                             // 每次操作成功后，重新获取数据
                             this.initialize()
                         }).catch(err => {

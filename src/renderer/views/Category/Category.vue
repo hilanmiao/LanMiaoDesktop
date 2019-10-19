@@ -231,29 +231,6 @@
                     this.initialize()
                 },
                 deep: true
-            },
-            // dialogEdit: {
-            //     handler(val) {
-            //         val || this.closeDialogEdit()
-            //     }
-            // },
-            submitResult: {
-                handler(val) {
-                    if (val) {
-                        this.snackbarMsg = this.snackbarMsg ? this.snackbarMsg : 'Operation succeeded'
-                    } else {
-                        this.snackbarMsg = this.snackbarMsg ? this.snackbarMsg : 'Operation failed'
-                    }
-                }
-            },
-            snackbar: {
-                handler(val) {
-                    if (!val) {
-                        // 重置结果显示相关
-                        this.submitResult = false
-                        this.snackbarMsg = ''
-                    }
-                }
             }
         },
         mounted() {
@@ -349,6 +326,7 @@
                     this.closeDialogDelete()
                     // 显示结果
                     this.snackbar = true
+                    this.snackbarMsg = 'Operation succeeded'
                     // 每次操作成功后，重新获取数据
                     this.initialize()
                 }).catch(err => {
@@ -356,6 +334,7 @@
                     this.submitResult = false
                     // 显示结果
                     this.snackbar = true
+                    this.snackbarMsg = err.message
                     // 每次操作成功后，重新获取数据
                     this.initialize()
                 })
@@ -372,6 +351,7 @@
                     this.closeDialogDeleteBatch()
                     // 显示结果
                     this.snackbar = true
+                    this.snackbarMsg = 'Operation succeeded'
                     // 每次操作成功后，重新获取数据
                     this.initialize()
                 }).catch(err => {
@@ -379,6 +359,7 @@
                     this.submitResult = false
                     // 显示结果
                     this.snackbar = true
+                    this.snackbarMsg = err.message
                     // 每次操作成功后，重新获取数据
                     this.initialize()
                 })
@@ -388,8 +369,8 @@
                 if (this.$refs.form.validate()) {
                     if (this.editedIndex > -1) {
                         // 业务需求：判断是否已经存在一模一样的
-                        getModelWhere({category: this.editedItem.category, remark: this.editedItem.remark}).then(result => {
-                            if (result.code === 200 && result.data.length) {
+                        getModelWhere({category: this.editedItem.category}).then(result => {
+                            if (result.code === 200 && result.data.length && result.data[0].id !== this.editedItem.id) {
                                 this.submitResult = false
                                 this.snackbar = true
                                 this.snackbarMsg = 'this category already exists'
@@ -403,6 +384,7 @@
                                     this.closeDialogEdit()
                                     // 显示结果
                                     this.snackbar = true
+                                    this.snackbarMsg = 'Operation succeeded'
                                     // 每次操作成功后，重新获取数据
                                     this.initialize()
                                 }).catch(err => {
@@ -437,6 +419,7 @@
                                     this.closeDialogEdit()
                                     // 显示结果
                                     this.snackbar = true
+                                    this.snackbarMsg = 'Operation succeeded'
                                     // 每次操作成功后，重新获取数据
                                     this.initialize()
                                 }).catch(err => {
