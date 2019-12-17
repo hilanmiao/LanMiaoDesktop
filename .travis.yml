@@ -1,4 +1,4 @@
-osx_image: xcode8.3
+osx_image: xcode11.2
 sudo: required
 dist: trusty
 language: c
