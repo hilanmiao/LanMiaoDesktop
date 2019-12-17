@@ -311,7 +311,10 @@
         postModel as postCategory
     } from '../../../api/category'
     import {getModelAll as getAssetsAll} from '../../../api/assets'
-    import Excel from 'exceljs'
+    const Excel = require('exceljs')
+    // const Excel = require('exceljs/modern.nodejs')
+    // import Excel from 'exceljs/modern.browser'
+    // import Excel from 'exceljs'
     import {app, remote, shell} from 'electron'
     import moment from 'moment'
     import fs from 'fs-extra'
