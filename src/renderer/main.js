@@ -1,3 +1,4 @@
+// TODO：如果不用，记得注释掉，否则travis 和 appveyor 构建会失败
 // import devtools from '@vue/devtools'
 import Vue from 'vue'
 import axios from 'axios'
