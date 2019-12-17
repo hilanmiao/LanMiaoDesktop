@@ -77,7 +77,7 @@
     </v-layout>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 
     // import {ipcRenderer} from 'electron'
     // import {putModelById, getModelWhere} from '../../../api/user'

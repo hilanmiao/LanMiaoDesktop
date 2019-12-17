@@ -168,7 +168,7 @@
     </v-layout>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
     // import {
     //     getModelWhere,
     //     getModelPagination,
