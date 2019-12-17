@@ -124,8 +124,6 @@ npm run lint
 
 - [Electron开发实战之记账软件19——通过协议唤起Electron应用](https://my.oschina.net/u/3667677/blog/3074681)
 
-- [Electron开发实战之记账软件20——主进程调试](https://my.oschina.net/u/3667677/blog/3119666)
-
 Electron开发实战之记账软件1——迷你程序
 
 Electron开发实战之记账软件99——完结
