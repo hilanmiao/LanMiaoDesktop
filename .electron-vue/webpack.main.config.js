@@ -6,7 +6,8 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
-const BabiliWebpackPlugin = require('babili-webpack-plugin')
+// const BabiliWebpackPlugin = require('babili-webpack-plugin')
+const BabiliWebpackPlugin = require('babel-minify-webpack-plugin')
 
 let mainConfig = {
   entry: {
