@@ -29,7 +29,8 @@
       "provider": "github",
       "repo": "LanMiaoDesktop",
       "owner": "hilanmiao",
-      "releaseType": "release"
+      "releaseType": "release",
+      "private": false
     },
     "files": [
       "dist/electron/**/*"
