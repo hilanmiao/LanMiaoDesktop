@@ -63,7 +63,10 @@
       "allowToChangeInstallationDirectory": true
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "build/icons",
+      "target": [
+        "AppImage"
+      ]
     }
   },
   "dependencies": {
