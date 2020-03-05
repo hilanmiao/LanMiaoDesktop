@@ -1,9 +1,10 @@
 
 name: lanmiaodesktop
 version: '1.0.0' # just for humans, typically '1.2+git' or '1.3.2'
-summary: Desktop bookkeeping program # 79 char long summary
+summary: Desktop bookkeeping program(Electron demo) # 79 char long summary
 description: |
-    Desktop bookkeeping program
+    this is an Electron demo.
+    https://github.com/hilanmiao/LanMiaoDesktop
 
 #grade: devel # must be 'stable' to release into candidate/stable channels
 #confinement: devmode # use 'strict' once you have the right plugs and slots
