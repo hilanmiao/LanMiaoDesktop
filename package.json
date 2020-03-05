@@ -16,7 +16,7 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "electron-builder install-app-deps",
     "release": "node .electron-vue/build.js && electron-builder",
-    "dist": "node .electron-vue/build.js && electron-builder -c.snap.publish=github"
+    "dist": "node .electron-vue/build.js && electron-builder"
   },
   "build": {
     "productName": "PocketBook",
