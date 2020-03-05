@@ -25,13 +25,19 @@
     "directories": {
       "output": "build"
     },
-    "publish": {
+    "publish": [
+      {
       "provider": "github",
       "repo": "LanMiaoDesktop",
       "owner": "hilanmiao",
       "releaseType": "release",
       "private": false
-    },
+      },
+      {
+      "provider": "snapStore",
+      "channel": "stable"
+      }
+    ],
     "files": [
       "dist/electron/**/*"
     ],
@@ -64,6 +70,10 @@
     },
     "linux": {
       "icon": "build/icons"
+    },
+    "snap": {
+      "summary": "Desktop bookkeeping program(Electron demo)",
+      "description": "this is an Electron demo.\n    https://github.com/hilanmiao/LanMiaoDesktop"
     }
   },
   "dependencies": {
