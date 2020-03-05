@@ -24,6 +24,7 @@ before_install:
 #  | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
   sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils;
+  sudo apt update;
   sudo apt install snapd;
   sudo snap wait system seed.loaded;
   sudo snap install snapcraft --classic;
