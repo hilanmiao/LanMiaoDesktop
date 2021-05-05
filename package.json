@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "@sentry/electron": "^0.17.1",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "electron-updater": "^4.0.6",
     "element-ui": "^2.9.1",
     "exceljs": "^3.5.0",
