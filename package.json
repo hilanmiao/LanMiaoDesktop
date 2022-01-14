@@ -72,7 +72,7 @@
   "dependencies": {
     "@sentry/electron": "^0.17.1",
     "axios": "^0.21.1",
-    "electron-updater": "^4.0.6",
+    "electron-updater": "^4.3.9",
     "element-ui": "^2.9.1",
     "exceljs": "^3.5.0",
     "fs-extra": "^8.0.1",
@@ -116,7 +116,7 @@
     "mini-css-extract-plugin": "^0.6.0",
     "multispinner": "^0.2.1",
     "node-loader": "^0.6.0",
-    "node-sass": "^4.12.0",
+    "sass": "^1.47.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "url-loader": "^1.1.2",
