@@ -1,3 +1,4 @@
+const { VueLoaderPlugin } = require('vue-loader')
 const rules = require('./webpack.rules');
 
 rules.push({
@@ -10,4 +11,8 @@ module.exports = {
   module: {
     rules,
   },
+  plugins: [
+    // https://vue-loader.vuejs.org/guide/#manual-setup
+    new VueLoaderPlugin()
+  ]
 };

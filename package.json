@@ -24,7 +24,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "tmp2"
+            "name": "LanMiaoDesktopOnline"
           }
         },
         {
@@ -73,9 +73,19 @@
     "css-loader": "^6.0.0",
     "electron": "18.0.3",
     "node-loader": "^2.0.0",
-    "style-loader": "^3.0.0"
+    "sass": "^1.50.0",
+    "sass-loader": "^12.6.0",
+    "style-loader": "^3.0.0",
+    "vue-loader": "^15.9.8",
+    "vue-template-compiler": "^2.6.14"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-log": "^4.4.6",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.0.1",
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.3",
+    "vuetify": "^2.6.4",
+    "vuex": "^3.6.2"
   }
 }
