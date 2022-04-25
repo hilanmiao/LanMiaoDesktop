@@ -1,3 +1,9 @@
+const path = require("path");
+
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
+
 module.exports = [
   // Add support for native node modules
   {
@@ -22,21 +28,7 @@ module.exports = [
     use: [
       'vue-style-loader',
       'css-loader',
-      {
-        loader: 'sass-loader',
-        // Requires sass-loader@^7.0.0
-        options: {
-          implementation: require('sass'),
-          indentedSyntax: true // optional
-        },
-        // Requires >= sass-loader@^8.0.0
-        options: {
-          implementation: require('sass'),
-          sassOptions: {
-            indentedSyntax: true // optional
-          },
-        },
-      },
+      'sass-loader'
     ],
   },
   // https://vue-loader.vuejs.org/guide/#manual-setup
@@ -45,6 +37,25 @@ module.exports = [
     use: {
       loader: 'vue-loader',
     },
+  },
+  {
+    test: /\.svg$/,
+    loader: 'svg-sprite-loader',
+    include: [resolve('src/icons')],
+    options: {
+      symbolId: 'icon-[name]'
+    }
+  },
+  {
+    test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+    loader: 'url-loader',
+    options: {
+      limit: 10000,
+      name: '[name].[ext]',
+      // 如果要在图片的src里使用，这里要添加esModule属性，默认是true，需要设置成false
+      esModule: false
+    },
+    exclude: [resolve('src/icons')]
   },
   // Put your webpack loader rules in this array.  This is where you would put
   // your ts-loader configuration for instance:

@@ -1,8 +1,8 @@
 {
-  "name": "LanMiaoDesktopOnline",
+  "name": "lanmiao-desktop-online",
   "productName": "LanMiaoDesktopOnline",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "您的私人理财专家",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": {
-    "name": "hilanmiao",
+    "name": "张国栋",
     "email": "hilanmiao@126.com"
   },
   "license": "MIT",
@@ -72,20 +72,27 @@
     "@vercel/webpack-asset-relocator-loader": "1.7.0",
     "css-loader": "^6.0.0",
     "electron": "18.0.3",
+    "file-loader": "^6.2.0",
     "node-loader": "^2.0.0",
     "sass": "^1.50.0",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.0.0",
+    "svg-sprite-loader": "^6.0.11",
+    "url-loader": "^4.1.1",
     "vue-loader": "^15.9.8",
     "vue-template-compiler": "^2.6.14"
   },
   "dependencies": {
+    "dayjs": "^1.11.1",
+    "echarts": "^4.9.0",
     "electron-log": "^4.4.6",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
+    "element-ui": "^2.15.8",
+    "lodash": "^4.17.21",
     "vue": "^2.6.14",
+    "vue-count-to": "^1.0.13",
     "vue-router": "^3.5.3",
-    "vuetify": "^2.6.4",
     "vuex": "^3.6.2"
   }
 }
