@@ -1,3 +1,11 @@
+> 特别提醒
+- *online* 分支是网络版，基于 [electron-forge](https://github.com/electron-userland/electron-forge) 开发，需要配合我的另一个开源项目 [招财猫](https://github.com/hilanmiao/smart-miao) 进行开发
+- *master* 分支是离线版，基于 [elctron-vue](https://github.com/SimulatedGREG/electron-vue) 开发
+
+![首页](screenshot-home-online.png)
+
+***
+
 # PocketBook
 
 <p align="center">
@@ -54,25 +62,31 @@ npm run lint
 
 ## 其他相关
 
-- [NSIS-UI](https://github.com/hilanmiao/NSIS-UI)：exe安装包美化程序。
+- [NSIS-UI](https://github.com/hilanmiao/NSIS-UI)  windows exe安装包美化程序。
 
 
 ## 赞助
 
 如果你喜欢它,不妨给它点个star或者请我喝杯咖啡
 
-支付宝：
-
-<img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/alipay.png" width="200" hegiht="200"/> 
-
-微信：
-
-<img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/wechatpay.png" width="200" hegiht="200"/>
-
+<table>
+ <tr>
+    <th>支付宝</th>
+    <th>微信</th>
+ </tr>
+  <tr>
+    <td valign="top">
+        <img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/alipay.png" width="200" hegiht="200"/>
+    </td>
+    <td valign="top">
+        <img src="https://raw.githubusercontent.com/hilanmiao/LanMiaoDesktop/master/assets/wechatpay.png" width="200" hegiht="200"/>
+    </td>
+  </tr>
+</table>
 
 ## 开源协议
 
-本项目基于 [MIT](http://opensource.org/licenses/MIT)协议，请自由地享受和参与开源。
+本项目基于 [MIT](http://opensource.org/licenses/MIT) 协议，请自由地享受和参与开源。
 
 
 ## 贡献
