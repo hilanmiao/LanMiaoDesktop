@@ -20,8 +20,6 @@ export default {
     this.$_destroyResizeEvent()
     this.$_destroySidebarResizeEvent()
   },
-  // to fixed bug when cached by keep-alive
-  // https://github.com/PanJiaChen/vue-element-admin/issues/2116
   activated() {
     this.$_initResizeEvent()
     this.$_initSidebarResizeEvent()

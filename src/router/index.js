@@ -6,9 +6,10 @@ import Layout from '@/layout'
 
 export const routes = [
   {
-    path: '/404',
-    component: () => import('@/views/404.vue'),
-    hidden: true
+    path: '/login',
+    component: () => import('@/views/login'),
+    hidden: true,
+    meta: { title: '登录' }
   },
   {
     path: '/',

@@ -33,22 +33,17 @@ console.log('👋 This message is being logged by "renderer.js", included via we
 // src/main.js
 
 import Vue from 'vue'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import App from './App.vue';
-
+import App from './App';
 import router from './router';
-import _ from 'lodash'
-import dayjs from 'dayjs'
+import store from './store'
 
+import './bootstrap'
 import './icons'
 
-Vue.use(ElementUI);
-
-Vue.prototype.$_ = _
-Vue.prototype.$dayjs = dayjs
-
-new Vue({
+const vm = new Vue({
     router,
+    store,
     render: (h) => h(App),
 }).$mount('#app')
+
+export default vm
