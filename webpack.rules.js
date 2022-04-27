@@ -48,15 +48,21 @@ module.exports = [
   },
   {
     test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-    loader: 'url-loader',
-    options: {
-      limit: 10000,
-      name: '[name].[ext]',
-      // 如果要在图片的src里使用，这里要添加esModule属性，默认是true，需要设置成false
-      esModule: false
-    },
+    type: 'asset',
     exclude: [resolve('src/icons')]
   },
+  // {
+  //   test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+  //   loader: 'url-loader',
+  //   options: {
+  //     limit: 10000,
+  //     name: '[name].[ext]',
+  //     // 如果要在图片的src里使用，这里要添加esModule属性，默认是true，需要设置成false
+  //     esModule: false
+  //   },
+  //   type: 'javascript/auto',
+  //   exclude: [resolve('src/icons')]
+  // },
   // Put your webpack loader rules in this array.  This is where you would put
   // your ts-loader configuration for instance:
   /**
