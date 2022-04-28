@@ -1,3 +1,4 @@
+// const VUE_APP_BASE_API = 'http://localhost:7001'
 const VUE_APP_BASE_API = 'https://services.smartmiao.com'
 const VUE_APP_BASE_SOCKET = 'https://services.smartmiao.com'
 
@@ -95,7 +96,8 @@ router.beforeEach(async(to, from, next) => {
       } catch (error) {
         // remove token
         await store.dispatch('auth/clearAuth')
-        Message.error(`${error}` || '发生了一些未知的错误，请重试！')
+        const errorMessage = error && error.data.message || '发生了一些未知的错误，请重试！'
+        Message.error(errorMessage)
 
         // go to login page to re-login
         next(`/login?redirect=${to.path}`)
