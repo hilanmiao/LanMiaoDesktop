@@ -6427,6 +6427,11 @@
   "resolved" "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   "version" "0.0.6"
 
+"ua-parser-js@^1.0.2":
+  "integrity" "sha512-00y/AXhx0/SsnI51fTc0rLRmafiGOM4/O+ny10Ps7f+j/b8p/ZY11ytMgznXkOVo4GQ+KwQG5UQLkLGirsACRg=="
+  "resolved" "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-1.0.2.tgz"
+  "version" "1.0.2"
+
 "unidecode@0.1.8":
   "integrity" "sha1-77swFTi8RSRqmsjFWdcvAVMFBT4="
   "resolved" "https://registry.npmjs.org/unidecode/-/unidecode-0.1.8.tgz"

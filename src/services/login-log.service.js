@@ -6,4 +6,8 @@ internals.getLoginLogListByPage = (params) => {
   return http.get(apiUrl + 'page', params)
 }
 
+internals.getLoginLogListByPageMine = (params) => {
+  return http.get(apiUrl + 'pageMine', params)
+}
+
 export default internals
