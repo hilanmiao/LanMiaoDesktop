@@ -59,7 +59,7 @@
         </el-input>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+      <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
         登&nbsp;&nbsp;&nbsp;录
       </el-button>
     </el-form>
@@ -96,8 +96,8 @@ export default {
     }
     return {
       loginForm: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: '123456',
         verifyCode: '',
         captchaId: ''
       },
@@ -180,14 +180,6 @@ export default {
           return false
         }
       })
-    },
-    getOtherQuery(query) {
-      return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
-        }
-        return acc
-      }, {})
     },
     async handleRefreshCaptcha() {
       try {

@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { authService } from '@/services'
 
 export default {
   components: {},
@@ -55,8 +56,18 @@ export default {
   created() {
   },
   methods: {
-    logout() {
+    async logout() {
+      authService.logout()
+          .then(response => {
+            this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+          })
+          .catch(e => {
+            console.error('MainHeader.logout-error:', e)
+            const errorMessage = e && e.data.message || '发生了一些未知的错误，请重试！'
+            this.$message.error(errorMessage)
 
+            this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+          })
     }
   }
 }

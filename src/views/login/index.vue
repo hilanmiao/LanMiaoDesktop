@@ -18,28 +18,10 @@
               <span class="sub-title">您的私人理财专家</span>
             </div>
           </div>
-          <el-tabs v-model="activeTabName">
-            <el-tab-pane label="密码登录" name="account">
-              <account-login />
-            </el-tab-pane>
-            <el-tab-pane label="短信登录" name="note">
-              <note-login />
-            </el-tab-pane>
-            <el-tab-pane label="扫码登录" name="scan">
-              <scan-login />
-            </el-tab-pane>
-          </el-tabs>
+          <account-login />
           <div class="box-bottom">
             <div class="social">
-              <div class="icon" :style="{ backgroundColor: '#24292e' }" @click="go(loginGithubURI)">
-                <svg-icon icon-class="github" />
-              </div>
-              <div class="icon" :style="{ backgroundColor: '#1BB723' }" @click="go(loginWeixinURI)">
-                <svg-icon icon-class="wechat" />
-              </div>
-              <div class="icon" :style="{ backgroundColor: '#4494F0' }" @click="go(loginDingtalkURI)">
-                <svg-icon icon-class="dingtalk" />
-              </div>
+
             </div>
             <div class="register">
               <span>没有账号？</span>
@@ -56,9 +38,6 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import { authService } from '@/services'
-import { Message } from 'element-ui'
 import CanvasStarBackground from '@/components/CanvasStarBackground'
 import accountLogin from './components/account-login'
 import register from './components/register'
@@ -67,42 +46,11 @@ export default {
   name: 'Login',
   components: { accountLogin, CanvasStarBackground, register },
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
-    }
     return {
-      loginForm: {
-        username: 'admin',
-        password: '123456'
-      },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-      },
-      passwordType: 'password',
-      capsTooltip: false,
-      loading: false,
-      showDialog: false,
       redirect: undefined,
       otherQuery: {},
-      shortUrl: '',
-      activeTabName: 'account',
       dialogFormVisible: false
     }
-  },
-  computed: {
-
   },
   watch: {
     $route: {
@@ -122,63 +70,12 @@ export default {
     if (this.$route.query.action === 'register') {
       this.dialogFormVisible = true
     }
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
-    }
   },
   destroyed() {
   },
   methods: {
     go(uri) {
       location.href = uri
-    },
-    checkCapslock({ shiftKey, key } = {}) {
-      if (key && key.length === 1) {
-        if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
-          this.capsTooltip = true
-        } else {
-          this.capsTooltip = false
-        }
-      }
-      if (key === 'CapsLock' && this.capsTooltip === true) {
-        this.capsTooltip = false
-      }
-    },
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
-    },
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-
-          authService.login(this.loginForm)
-            .then(response => {
-              this.loading = false
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-            })
-            .catch(error => {
-              this.loading = false
-              Message({
-                message: error.data.message,
-                type: 'error',
-                duration: 5 * 1000
-              })
-            })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -196,12 +93,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  $loginWidth: 760px;
-  $loginHeight: 480px;
+  $loginWidth: 660px;
+  $loginHeight: 380px;
   $colorExtraHeight: 40px;
   $imageExtraWidth: 40px;
   $borderRadius: 8px;
-  $formPaddingLeft: 80px;
+  $formPaddingLeft: 30px;
 
   .login-container {
     min-height: 100%;
@@ -247,7 +144,7 @@ export default {
     .box-title {
       display: flex;
       align-items: center;
-      padding-top: 10px;
+      padding: 20px 0;
       .logo {
         height: 44px;
         width: 44px;
@@ -284,33 +181,15 @@ export default {
       .right {
         flex: 1;
         padding-left: calc(#{$formPaddingLeft}/2);
-
-        .el-tabs {
-          padding-right: calc(#{$formPaddingLeft}/2);
-          padding-top: 30px;
-        }
+        padding-right: calc(#{$formPaddingLeft}/2);
       }
     }
 
     .box-bottom {
-      padding-right: calc(#{$formPaddingLeft}/2);
+      padding-top: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .social {
-        color: #ffffff;
-        display: flex;
-        .icon {
-          cursor: pointer;
-          margin-right: 6px;
-          border-radius: 50%;
-          width: 36px;
-          height: 36px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      }
       .register {
         font-size: 14px;
         color: #909399;

@@ -6,7 +6,8 @@
 需要配合我的另一个开源项目 [招财猫](https://github.com/hilanmiao/smart-miao) 进行开发。
 
 核心框架：
-- [electron-forge](https://github.com/electron-userland/electron-forge)
+- [electron-forge](https://github.com/electron-userland/electron-forge) 6.x
+- webpack 5.x
 - vue 2.x
 - element-ui 2.x
 
