@@ -11,3 +11,9 @@ body {
     height: 100%;
     overflow: hidden;
 }
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}

@@ -15,9 +15,15 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/">
+          <router-link to="/account-manage">
             <svg-icon icon-class="money-collect-fill"></svg-icon>
             记账管理
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/account-manage/account-book">
+            <svg-icon icon-class="book-fill"></svg-icon>
+            账本管理
           </router-link>
         </li>
         <li>
@@ -27,7 +33,7 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/">
+          <router-link to="/bag">
             <svg-icon icon-class="wallet-fill"></svg-icon>
             我的卡包
           </router-link>

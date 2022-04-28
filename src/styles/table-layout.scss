@@ -1,0 +1,34 @@
+.table-layout {
+  .search-input {
+    width: 300px;
+  }
+
+  .line {
+    color: #DCDFE6;padding: 0 20px;
+  }
+
+  // 有 checkbox 多选的 table 样式
+  .has-checkbox {
+    ::v-deep &.el-table {
+      tr {
+        th, td {
+          &:first-child {
+            border-right: none;
+
+            .cell {
+              padding-right: 0;
+              color: #909399;
+            }
+          }
+
+          &:nth-child(2) {
+            .cell {
+              padding-left: 0;
+              padding-right: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -6584,6 +6584,11 @@
   "resolved" "https://registry.npmjs.org/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz"
   "version" "2.3.4"
 
+"vue-json-pretty@^1.8.2":
+  "integrity" "sha512-8DbgvyXpBrhDdBzz8RTe+POZ+HI6nSa33DqsPMWhMkv0u0ATklgxErUM3XRRvTzOQ/02Sh1LNWJ/rkqTow2rbA=="
+  "resolved" "https://registry.npmjs.org/vue-json-pretty/-/vue-json-pretty-1.8.2.tgz"
+  "version" "1.8.2"
+
 "vue-loader@^15.9.8":
   "integrity" "sha512-GwSkxPrihfLR69/dSV3+5CdMQ0D+jXg8Ma1S4nQXKJAznYFX14vHdc/NetQc34Dw+rBbIJyP7JOuVb9Fhprvog=="
   "resolved" "https://registry.npmjs.org/vue-loader/-/vue-loader-15.9.8.tgz"

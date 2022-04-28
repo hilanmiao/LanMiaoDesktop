@@ -18,17 +18,22 @@
     </div>
     <div class="wrapper-right">
       <div class="container-icon">
-        <el-badge is-dot class="item">
-          <el-button circle>
-            <svg-icon icon-class="notification"/>
-          </el-button>
-        </el-badge>
+<!--        <el-badge is-dot class="item">-->
+<!--          <el-button circle>-->
+<!--            <svg-icon icon-class="notification"/>-->
+<!--          </el-button>-->
+<!--        </el-badge>-->
+
+        <onlineUsers class="right-menu-item hover-effect badge-container" />
+
+        <notification class="right-menu-item hover-effect" :unread-count="unreadNotifications" />
       </div>
       <div class="container-avatar">
         <el-dropdown class="" trigger="click">
           <div class="box-avatar">
-            <img src="@/assets/images/logo.png" class="user-avatar">
-            <span>张国栋</span>
+            <img v-if="user.avatar" :src="VUE_APP_BASE_API + user.avatar" class="user-avatar">
+            <img v-else src="@/assets/images/logo.png" class="user-avatar">
+            <span>{{ user.displayName }}</span>
             <i class="el-icon-caret-bottom"/>
           </div>
           <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -48,11 +53,23 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import OnlineUsers from '@/components/OnlineUsers'
+import Notification from '@/components/Notification'
+
 import { authService } from '@/services'
 
 export default {
-  components: {},
-  computed: {},
+  components: {
+    Notification,
+    OnlineUsers
+  },
+  computed: {
+    ...mapGetters([
+      'user',
+      'unreadNotifications'
+    ])
+  },
   created() {
   },
   methods: {
@@ -102,6 +119,21 @@ export default {
 
     .container-icon {
       padding-right: 20px;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      .right-menu-item {
+        height: 100%;
+        padding-right: 20px;
+        ::v-deep .el-badge {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          .el-badge__content {
+            top: 16px;
+          }
+        }
+      }
     }
 
     .container-avatar {

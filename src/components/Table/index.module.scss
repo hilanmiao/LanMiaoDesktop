@@ -1,0 +1,43 @@
+.sf-table-wrapper {
+  position: relative;
+  display: flex;
+  width: 100%;
+  display: -webkit-flex;
+  flex-direction: column;
+
+  .sf-table-header {
+    padding-bottom: 12px;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+
+    .prepend-box {
+      flex: 1;
+    }
+
+    .tb-option-box {
+      display: flex;
+      display: -webkit-flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 18px;
+      i {
+        cursor: pointer;
+        margin-left: 15px;
+      }
+    }
+  }
+
+  .sf-table-content {
+    width: 100%;
+  }
+
+  .sf-table-pagination {
+    display: flex;
+    width: 100%;
+    display: -webkit-flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 20px;
+  }
+}
