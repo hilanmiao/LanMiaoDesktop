@@ -204,4 +204,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/table-layout.scss";
 
+.table-layout {
+  margin: 0 !important;
+}
 </style>
