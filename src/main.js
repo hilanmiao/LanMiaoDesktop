@@ -12,6 +12,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
+    titleBarStyle: 'hidden'
   });
 
   // and load the index.html of the app.

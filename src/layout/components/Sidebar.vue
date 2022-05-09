@@ -77,19 +77,22 @@ export default {
     height: 60px;
     border-bottom: 1px solid #dfe6ec;
     box-sizing: border-box;
+    display: flex;
+    align-items: flex-end;
   }
   .link {
     padding-left: 24px;
+    padding-bottom: 4px;
     display: flex;
     align-items: center;
     color: #409EFF;
     text-decoration: none;
     img {
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
     }
     h1 {
-      margin-left: 12px;
+      margin: 0 0 0 12px;
     }
   }
 

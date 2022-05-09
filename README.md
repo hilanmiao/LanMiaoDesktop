@@ -5,6 +5,31 @@
 这是区别于主分支 [LanMiaoDesktop-master](https://github.com/hilanmiao/LanMiaoDesktop) 的网络版，
 需要配合我的另一个开源项目 [招财猫](https://github.com/hilanmiao/smart-miao) 进行开发。
 
+招财猫系列应用截图：
+<table>
+ <tr>
+    <th>网页端</th>
+    <th>移动端</th>
+    <th>桌面端</th>
+    <th>营销网站</th>
+ </tr>
+  <tr>
+    <td valign="top">
+        <img src="screenshot-frontend.png" height="200" />
+    </td>
+    <td valign="top">
+        <img src="screenshot-app.png" height="200" />
+    </td>
+    <td valign="top">
+        <img src="screenshot-desktop.png" height="200" />
+    </td>
+    <td valign="top">
+        <img src="screenshot-web.png" height="200" />
+    </td>
+
+  </tr>
+</table>
+
 核心框架：
 - [electron-forge](https://github.com/electron-userland/electron-forge) 6.x
 - webpack 5.x
