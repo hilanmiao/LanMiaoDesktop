@@ -26,7 +26,6 @@
     <td valign="top">
         <img src="screenshot-web.png" height="200" />
     </td>
-
   </tr>
 </table>
 

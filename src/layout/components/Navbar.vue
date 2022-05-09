@@ -96,22 +96,31 @@ export default {
   display: flex;
 
   .wrapper-left {
+    -webkit-app-region: drag;
     display: flex;
     align-items: center;
+    ::v-deep .el-breadcrumb {
+      -webkit-app-region: no-drag;
+    }
   }
 
   .wrapper-center {
+    -webkit-app-region: drag;
     padding-left: 60px;
     display: flex;
     align-items: center;
-    ::v-deep .el-input__inner {
-      background-color: #f8f9fb;
-      border-radius: 8px;
-      border: none;
+    ::v-deep .el-input {
+      -webkit-app-region: no-drag;
+      .el-input__inner {
+        background-color: #f8f9fb;
+        border-radius: 8px;
+        border: none;
+      }
     }
   }
 
   .wrapper-right {
+    -webkit-app-region: drag;
     flex: 1;
     display: flex;
     align-items: center;
@@ -126,6 +135,7 @@ export default {
         height: 100%;
         padding-right: 20px;
         ::v-deep .el-badge {
+          -webkit-app-region: no-drag;
           height: 100%;
           display: flex;
           align-items: center;
@@ -144,23 +154,25 @@ export default {
       align-items: center;
       color: #606266;
       font-weight: bold;
+      ::v-deep .el-dropdown {
+        -webkit-app-region: no-drag;
+        .box-avatar {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
 
-      .box-avatar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
+          .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #dbcfbd;
+            border: 2px solid #ede1d3;
+          }
 
-        .user-avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background-color: #dbcfbd;
-          border: 2px solid #ede1d3;
-        }
-
-        span {
-          padding: 0 10px;
+          span {
+            padding: 0 10px;
+          }
         }
       }
     }

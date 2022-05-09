@@ -74,6 +74,7 @@ export default {
   position: relative;
   height: 100%;
   .sidebar-logo {
+    -webkit-app-region: drag;
     height: 60px;
     border-bottom: 1px solid #dfe6ec;
     box-sizing: border-box;
@@ -81,6 +82,7 @@ export default {
     align-items: flex-end;
   }
   .link {
+    -webkit-app-region: no-drag;
     padding-left: 24px;
     padding-bottom: 4px;
     display: flex;
