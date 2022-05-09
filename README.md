@@ -4,6 +4,31 @@
 
 ![首页](screenshot-home-online.png)
 
+招财猫系列应用截图：
+
+<table>
+ <tr>
+    <th>网页端</th>
+    <th>移动端</th>
+    <th>桌面端</th>
+    <th>营销网站</th>
+ </tr>
+  <tr>
+    <td valign="top">
+        <img src="screenshot-frontend.png" height="200" />
+    </td>
+    <td valign="top">
+        <img src="screenshot-app.png" height="200" />
+    </td>
+    <td valign="top">
+        <img src="screenshot-desktop.png" height="200" />
+    </td>
+    <td valign="top">
+        <img src="screenshot-web.png" height="200" />
+    </td>
+  </tr>
+</table>
+
 ***
 
 # PocketBook
