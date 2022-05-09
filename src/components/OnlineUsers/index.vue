@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     click() {
-      this.$router.push({ path: '/system/monitor/online-user' })
+      this.$router.push({ path: '/profile/online-user' })
     }
   }
 }

@@ -38,6 +38,11 @@ export const routes = [
             name: 'notification',
             component: () => import('@/views/profile/notification/index'),
             meta: {title: '我的消息'}
+        },{
+            path: 'online-user',
+            name: 'online-user',
+            component: () => import('@/views/profile/online-user/index'),
+            meta: {title: '在线用户'}
         }]
     },
     {

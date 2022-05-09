@@ -49,7 +49,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .notification-container {
-  padding: 20px;
+  //padding: 20px;
+
+  .table-layout {
+    margin: 0 !important;
+  }
 
   ::v-deep .el-card {
     margin: 0 !important;
