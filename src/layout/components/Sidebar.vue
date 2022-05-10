@@ -9,19 +9,19 @@
     <div class="sidebar-nav">
       <ul>
         <li>
-          <router-link to="/" class="active">
+          <router-link to="/" :class="{ active: this.$route.path.includes('dashboard')}">
             <svg-icon icon-class="home-fill"></svg-icon>
             首页
           </router-link>
         </li>
         <li>
-          <router-link to="/account-manage">
+          <router-link to="/account-manage" :class="{ active: this.$route.path.includes('account-manage')}">
             <svg-icon icon-class="money-collect-fill"></svg-icon>
             记账管理
           </router-link>
         </li>
         <li>
-          <router-link to="/account-manage/account-book">
+          <router-link to="/account-manage/account-book" :class="{ active: this.$route.path.includes('account-book')}">
             <svg-icon icon-class="book-fill"></svg-icon>
             账本管理
           </router-link>
@@ -33,7 +33,7 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/bag">
+          <router-link to="/bag" :class="{ active: this.$route.path.includes('bag')}">
             <svg-icon icon-class="wallet-fill"></svg-icon>
             我的卡包
           </router-link>
