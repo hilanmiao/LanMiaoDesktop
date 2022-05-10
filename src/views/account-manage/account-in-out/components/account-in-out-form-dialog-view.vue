@@ -15,13 +15,13 @@
         <template slot="label">
           账本
         </template>
-        {{ form.accountBook.name }}
+        {{ form.accountBook && form.accountBook.name || '' }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           收支分类
         </template>
-        {{ form.accountInOutCategory.name }}
+        {{ form.accountInOutCategory && form.accountInOutCategory.name || '' }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
