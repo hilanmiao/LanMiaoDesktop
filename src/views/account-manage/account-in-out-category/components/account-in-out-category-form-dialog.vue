@@ -14,6 +14,28 @@
       <el-form-item label="名称" :label-width="labelWidth" prop="name">
         <el-input v-model="form.name" autocomplete="off" />
       </el-form-item>
+      <el-form-item label="图标" :label-width="labelWidth" prop="icon">
+        <!--        <icon-selector :value="form.icon" @selected="iconSelected" />-->
+        <el-popover
+          v-model="popoverVisibleIcon"
+          placement="bottom-start"
+          width="700"
+          trigger="click"
+        >
+          <el-scrollbar wrap-style="max-height: 300px;">
+            <icon-selector :value="form.icon" @selected="iconSelected" />
+          </el-scrollbar>
+          <el-input
+            slot="reference"
+            v-model="form.icon"
+            placeholder="请选择图标"
+            readonly
+          >
+            <svg-icon v-if="form.icon" slot="prefix" :icon-class="form.icon" />
+            <span v-else slot="prefix" />
+          </el-input>
+        </el-popover>
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-row type="flex" justify="end">
@@ -27,10 +49,11 @@
 <script>
 import _ from 'lodash'
 import { accountInOutCategoryService } from '@/services'
+import IconSelector from '@/components/IconSelector'
 
 export default {
   components: {
-
+    IconSelector
   },
   model: {
     prop: 'dialogVisible',
@@ -53,14 +76,17 @@ export default {
       defaultForm: null,
       form: {
         id: '',
-        name: ''
+        name: '',
+        icon: ''
       },
       rules: {
-        name: [{ required: true, message: '必填', trigger: 'blur' }]
+        name: [{ required: true, message: '必填', trigger: 'blur' }],
+        icon: [{ required: true, message: '必选', trigger: 'input' }]
       },
       loading: false,
-      saving: false
+      saving: false,
       // 业务属性
+      popoverVisibleIcon: false
     }
   },
   computed: {
@@ -112,8 +138,9 @@ export default {
       try {
         const response = await accountInOutCategoryService.getAccountInOutCategory({ id: this.form.id })
         const { data: accountInOutCategory } = response.data
-        const { name } = accountInOutCategory
+        const { name, icon } = accountInOutCategory
         this.form.name = name
+        this.form.icon = icon
       } catch (e) {
         console.error('accountInOutCategory.getAccountInOutCategory-error:', e)
         const errorMessage = e && e.data.message || '发生了一些未知的错误，请重试！'
@@ -182,7 +209,12 @@ export default {
           }
         }
       })
-    }
+    },
+    // 图标选择
+    iconSelected(val) {
+      this.form.icon = val
+      this.popoverVisibleIcon = false
+    },
   }
 }
 </script>
