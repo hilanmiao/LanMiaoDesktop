@@ -7,7 +7,7 @@
   <a href="https://travis-ci.org/hilanmiao/LanMiaoDesktop/builds">
     <img src="https://travis-ci.org/hilanmiao/LanMiaoDesktop.svg?branch=master" alt="">
   </a>
-  <a href="https://github.com/hilanmiao/LanMiaoDesktop/blob/master/LICENSE">
+  <a href="https://gitee.com/XiaoLanMiao/LanMiaoDesktop/blob/master/LICENSE">
       <img src="https://img.shields.io/github/license/hilanmiao/LanMiaoDesktop.svg" alt="">
     </a>
 </p>
@@ -21,7 +21,7 @@
 
 macOS用户请下载最新版本的`dmg`文件，windows用户请下载最新版本的`exe`文件，linux用户请下载`AppImage`文件。
 
-点击此处下载[应用](https://github.com/hilanmiao/LanMiaoDesktop/releases)。
+点击此处下载[应用](https://gitee.com/XiaoLanMiao/LanMiaoDesktop/releases)。
 
 安装完毕，点击此处[尝试打开](PocketBook:?a=1&b=2)。
 
@@ -79,9 +79,9 @@ npm run lint
 
 如果你有好的意见或建议，欢迎给我们提 [issue] 或 [PR]，为优化 [LanMiaoDesktop] 贡献力量
 
-[PR]: https://github.com/hilanmiao/LanMiaoDesktop/pulls
+[PR]: https://gitee.com/XiaoLanMiao/LanMiaoDesktop/pulls
 
-[issue]: https://github.com/hilanmiao/LanMiaoDesktop/issues
+[issue]: https://gitee.com/XiaoLanMiao/LanMiaoDesktop/issues
 
 [LanMiaoDesktop]: https://github.com/youzan/vant-weapp
 

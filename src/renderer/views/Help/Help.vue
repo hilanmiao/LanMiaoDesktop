@@ -2,7 +2,7 @@
     <div class="intro-wrapper">
         <canvas></canvas>
         <div class="info-wrapper">
-            <h1>https://github.com/hilanmiao/LanMiaoDesktop</h1>
+            <h1>https://gitee.com/XiaoLanMiao/LanMiaoDesktop</h1>
         </div>
     </div>
 </template>
