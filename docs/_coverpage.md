@@ -4,5 +4,5 @@
 
 > <span style="line-height:1.8rem;font-weight:400;font-size:1.3rem">A simple electron application<span>
 
-[Star Me](https://gitee.com/XiaoLanMiao/LanMiaoDesktop)
+[Star Me](https://github.com/hilanmiao/LanMiaoDesktop)
 [Get Started](#main)

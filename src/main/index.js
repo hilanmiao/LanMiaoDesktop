@@ -256,7 +256,7 @@ function createTray() {
             label: '关于项目',
             click: function () {
                 // 打开外部链接
-                shell.openExternal('https://gitee.com/XiaoLanMiao/LanMiaoDesktop')
+                shell.openExternal('https://github.com/hilanmiao/LanMiaoDesktop')
             }
         },
         {
