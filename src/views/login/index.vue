@@ -15,7 +15,7 @@
             <img src="@/assets/images/logo.png" alt="" class="logo">
             <div class="info">
               <span class="title">Smart Miao</span>
-              <span class="sub-title">您的私人理财专家</span>
+              <span class="sub-title">您的贴心生活助理</span>
             </div>
           </div>
           <account-login />

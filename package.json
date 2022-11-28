@@ -2,7 +2,7 @@
   "name": "lanmiao-desktop-online",
   "productName": "LanMiaoDesktopOnline",
   "version": "1.0.0",
-  "description": "您的私人理财专家",
+  "description": "您的贴心生活助理",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -19,7 +19,9 @@
   "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "./src/assets/images/logo"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
@@ -31,7 +33,10 @@
           "name": "@electron-forge/maker-zip",
           "platforms": [
             "darwin"
-          ]
+          ],
+          "config": {
+            "iconUrl": "./src/assets/images/logo.icns"
+          }
         },
         {
           "name": "@electron-forge/maker-deb",
