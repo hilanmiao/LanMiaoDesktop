@@ -13,7 +13,7 @@ const APP = process.type === 'renderer' ? remote.app : app
 
 // 获取electron应用的用户目录
 const STORE_PATH = APP.getPath('userData')
-// console.log(STORE_PATH)
+console.log(STORE_PATH)
 // dev C:\Users\JD\AppData\Roaming\Electron
 // prod C:\Users\JD\AppData\Roaming\PocketBook
 
